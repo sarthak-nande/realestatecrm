@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <p sec:authentication="name"></p>
+    <p sec:authentication="principal.authorities"></p>
+    <div>
+    	<p sec:authorize="hasRole('USER')">For User</p>
+    </div>
+    <div>
+		<p sec:authorize="hasRole('ADMIN')">For Admin</p>
+	</div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+    <a th:href="@{/restricted}">Go To</a>
+</body>
+<script>
+    window.addEventListener('pageshow' , function (event) {
+		if(event.persisted || (window.performance && window.performance.navigation.type === 2)){
+			window.location.reload();
+		}
+});
+</script>
+
+</html>
