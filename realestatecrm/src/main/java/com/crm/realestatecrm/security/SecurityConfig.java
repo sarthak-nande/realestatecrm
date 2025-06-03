@@ -14,7 +14,6 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -38,7 +37,7 @@ public class SecurityConfig {
     }
 	
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
@@ -49,6 +48,7 @@ public class SecurityConfig {
 		.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests(configurer -> configurer
 				.requestMatchers("/login").anonymous()
+				.requestMatchers("/signup").anonymous()
 				.requestMatchers("/restricted").hasRole("ADMIN")
 				.anyRequest().authenticated())
 				.formLogin(form -> form
