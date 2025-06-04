@@ -42,11 +42,11 @@
 			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
 				aria-label="Close"></button>
 		</div>
-		<div class="offcanvas-body">
+		<div class="offcanvas-body" >
 			<ul class="nav flex-column">
 				<li class="nav-item"><a class="nav-link active" href="#"><i class="fa-solid fa-house"></i> Home</a>
 					</li>
-					<li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i> Add Customer
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i> Add Customer
 						</a></li>
 					<li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-circle-info"></i> Customer
 							Details</a></li>
@@ -76,7 +76,9 @@
 				<ul class="nav flex-column mt-3">
 					<li class="nav-item"><a class="nav-link active" href="#"><i class="fa-solid fa-house"></i> Home</a>
 					</li>
-					<li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i> Add Customer
+					<li sec:authorize="hasAuthority('ROLE_SALES')"  class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i> Add Customer
+						</a></li>
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')"  class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i> Add Sales-Exe
 						</a></li>
 					<li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-circle-info"></i> Customer
 							Details</a></li>
@@ -100,7 +102,7 @@
 			</div>
 
 			<!-- Main Content -->
-			<div class="col-md-10" th:insert="component/user :: user"></div>
+			<div class="col-md-10" ></div>
 		</div>
 	</div>
 

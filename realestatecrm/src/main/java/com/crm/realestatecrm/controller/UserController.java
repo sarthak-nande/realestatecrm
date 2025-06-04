@@ -11,14 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.crm.realestatecrm.dao.ManagerDAOImple;
 import com.crm.realestatecrm.dao.MangerDAO;
 import com.crm.realestatecrm.entity.Manager;
+import com.crm.realestatecrm.service.ManagerService;
 
 @Controller
 public class UserController {
 	
-	private MangerDAO mangerDAO;
+	private ManagerService managerService;
 	
-	public UserController(MangerDAO mangerDAO) {
-		this.mangerDAO = mangerDAO;
+	public UserController(ManagerService managerService) {
+		this.managerService = managerService;
 	}
 	
 	@GetMapping("/login")
@@ -38,7 +39,7 @@ public class UserController {
 	@PostMapping("/signup")
 	public String submitSignUp(@ModelAttribute Manager manager) {	
 		System.out.println(manager);
-		mangerDAO.save(manager);
+		managerService.save(manager);
 		return "redirect:auth/login";
 	}
 
