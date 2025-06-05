@@ -46,9 +46,9 @@
 			<ul class="nav flex-column">
 				<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i class="fa-solid fa-house"></i> Home</a>
 					</li>
-					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a class="nav-link" th:href="@{/dashboard/addSalesExec}"><i class="fa-solid fa-user-plus"></i> Add Customer
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link" th:href="@{/dashboard/addSalesExec}"><i class="fa-solid fa-user-plus"></i> Add Customer
 						</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-circle-info"></i> Customer
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a class="nav-link" th:href="@{/dashboard/addcustomer}"><i class="fa-solid fa-circle-info"></i> Customer
 							Details</a></li>
 					<li class="nav-item"><a class="nav-link" href="#"><i class="fa-solid fa-fire"></i> Campaign</a>
 					</li>
@@ -76,7 +76,7 @@
 				<ul class="nav flex-column mt-3">
 					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i class="fa-solid fa-house"></i> Home</a>
 					</li>
-					<li sec:authorize="hasAuthority('ROLE_SALES')"  class="nav-item"><a class="nav-link" ><i class="fa-solid fa-user-plus"></i> Add Customer
+					<li sec:authorize="hasAuthority('ROLE_SALES')"  class="nav-item"><a class="nav-link" th:href="@{/dashboard/addcustomer}"><i class="fa-solid fa-user-plus"></i> Add Customer
 						</a></li>
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')"  class="nav-item"><a class="nav-link" th:href="@{/dashboard/addSalesExec}"><i class="fa-solid fa-user-plus"></i> Add Sales-Exe
 						</a></li>
