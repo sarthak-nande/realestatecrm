@@ -106,17 +106,14 @@ public class SalesExecutive {
 		this.password = password;
 	}
 
-	public SalesExecutive(String salesExecId, String firstName, String lastName, String email, long mobileNumber,
-			String managerId, String password) {
-		super();
-		this.salesExecId = salesExecId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.mobileNumber = mobileNumber;
-		this.managerEmail = managerEmail;
-		this.password = password;
+	@Override
+	public String toString() {
+		return "SalesExecutive [salesExecId=" + salesExecId + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", mobileNumber=" + mobileNumber + ", managerEmail=" + managerEmail
+				+ ", password=" + password + "]";
 	}
+	
+	
 
 	
 }

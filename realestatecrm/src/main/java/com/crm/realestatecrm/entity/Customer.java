@@ -33,12 +33,18 @@ public class Customer {
 	@Column(name="manager_id")
 	private String managerId;
 	
+	@Column(name="source")
+	private String source;
+	
+	@Column(name="status")
+	private String status;
+	
 	public Customer() {
 		
 	}
 
 	public Customer(String firstName, String lastName, String email, long mobileNumber, String salesExecId, String managerId,
-			String password) {
+			String password, String source) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -46,6 +52,7 @@ public class Customer {
 		this.mobileNumber = mobileNumber;
 		this.salesExecId = salesExecId;
 		this.managerId = managerId;
+		this.source = source;
 	}
 
 	
@@ -103,6 +110,22 @@ public class Customer {
 
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }
