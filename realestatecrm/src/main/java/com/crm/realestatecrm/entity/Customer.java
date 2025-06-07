@@ -39,10 +39,33 @@ public class Customer {
 	@Column(name="status")
 	private String status;
 	
+	@Column(name="property_id")
+	private String propertyId;
+	
+	@Column(name="budget_range")
+	private String budgetRange;
+	
+	@Column(name="location_preference")
+	private String locationPreference;
+	
 	public Customer() {
 		
 	}
 
+	public Customer(String email, String propertyId) {
+		super();
+		this.email = email;
+		this.propertyId = propertyId;
+	}
+	
+	public Customer(String email, String locationPreference, String budgetRange, String status) {
+		super();
+		this.email = email;
+		this.locationPreference = locationPreference;
+		this.budgetRange = budgetRange;
+		this.status = status;
+	}
+	
 	public Customer(String firstName, String lastName, String email, long mobileNumber, String salesExecId, String managerId,
 			String password, String source) {
 		super();
@@ -54,8 +77,60 @@ public class Customer {
 		this.managerId = managerId;
 		this.source = source;
 	}
-
 	
+	public Customer(String customerId, String firstName, String lastName, String email, long mobileNumber,
+			String salesExecId, String managerId, String source, String status, String propertyId, String budgetRange,
+			String locationPreference) {
+		super();
+		this.customerId = customerId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.mobileNumber = mobileNumber;
+		this.salesExecId = salesExecId;
+		this.managerId = managerId;
+		this.source = source;
+		this.status = status;
+		this.propertyId = propertyId;
+		this.budgetRange = budgetRange;
+		this.locationPreference = locationPreference;
+	}
+	
+	
+	public Customer(String customerId, String firstName, String lastName, String email, long mobileNumber,
+			String salesExecId, String managerId, String source, String status, String propertyId) {
+		super();
+		this.customerId = customerId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.mobileNumber = mobileNumber;
+		this.salesExecId = salesExecId;
+		this.managerId = managerId;
+		this.source = source;
+		this.status = status;
+		this.propertyId = propertyId;
+	}
+	
+	public Customer(String customerId, String firstName, String lastName, String email, long mobileNumber,
+			String salesExecId, String managerId, String source, String status, String budgetRange,
+			String locationPreference) {
+		super();
+		this.customerId = customerId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.mobileNumber = mobileNumber;
+		this.salesExecId = salesExecId;
+		this.managerId = managerId;
+		this.source = source;
+		this.status = status;
+		this.budgetRange = budgetRange;
+		this.locationPreference = locationPreference;
+	}
+	
+	
+
 	public String getSalesExecId() {
 		return salesExecId;
 	}
@@ -126,6 +201,30 @@ public class Customer {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getPropertyId() {
+		return propertyId;
+	}
+
+	public void setPropertyId(String propertyId) {
+		this.propertyId = propertyId;
+	}
+
+	public String getBudgetRange() {
+		return budgetRange;
+	}
+
+	public void setBudgetRange(String budgetRange) {
+		this.budgetRange = budgetRange;
+	}
+
+	public String getLocationPreference() {
+		return locationPreference;
+	}
+
+	public void setLocationPreference(String locationPreference) {
+		this.locationPreference = locationPreference;
 	}
 	
 }

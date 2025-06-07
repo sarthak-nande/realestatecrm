@@ -136,7 +136,7 @@
 						<div th:if="${error}" class="alert alert-danger" role="alert">
 							<span th:text="${error}"></span>
 						</div>
-						<h2 class="text-center mb-4">Sales Executive</h2>
+						<h2 class="text-center mb-4">Add Customer</h2>
 
 						<form th:action="@{/dashboard/addcustomer}"
 							th:object="${customer}" method="post"
@@ -172,6 +172,7 @@
 										class="form-control" id="mobileNumber" required>
 								</div>
 
+
 								<!-- Source Input Field -->
 								<div class="row">
 									<div class="col-md-6 col-12 mb-3">
@@ -187,12 +188,13 @@
 										</select>
 									</div>
 								</div>
+
 							</div>
 
 							<!-- Submit Button -->
 							<div class="text-center text-md-end mt-3">
-								<button type="submit" class="btn btn-primary w-100 w-md-auto">Create
-									Sales Executive</button>
+								<button type="submit" class="btn btn-primary w-100 w-md-auto">New Customer
+									</button>
 							</div>
 						</form>
 
