@@ -10,12 +10,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.crm.realestatecrm.dao.SalesExecutiveDAO;
 import com.crm.realestatecrm.entity.Customer;
 import com.crm.realestatecrm.entity.Manager;
+import com.crm.realestatecrm.entity.Properties;
 import com.crm.realestatecrm.entity.SalesExecutive;
 import com.crm.realestatecrm.service.CustomerService;
+import com.crm.realestatecrm.service.PropertiesService;
 import com.crm.realestatecrm.service.SalesExecutiveService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,11 +30,13 @@ public class DashboardController {
 	
 	private SalesExecutiveService salesExecutiveService;
 	private CustomerService customerService;
+	private PropertiesService propertiesService;
 	
 	@Autowired
-	public DashboardController(SalesExecutiveService salesExecutiveService, CustomerService customerService) {
+	public DashboardController(SalesExecutiveService salesExecutiveService, CustomerService customerService, PropertiesService propertiesService) {
 		this.salesExecutiveService = salesExecutiveService;
 		this.customerService = customerService;
+		this.propertiesService = propertiesService;
 	}
 
 	@GetMapping("/dashboard")
@@ -69,9 +74,13 @@ public class DashboardController {
 	}
 	
 	@GetMapping("/dashboard/addcustomer")
-	public String showCustomerAddForm(@ModelAttribute Customer customer) {
+	public String showCustomerAddForm(@ModelAttribute Customer customer,Model model) {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String username = authentication.getName();
+	    
+	    List<Properties> properties = propertiesService.findAllProperties();
+	    
+	    model.addAttribute("properties", properties);
 
 	    return "dashboard/addcustomer"; 
 	}
@@ -100,7 +109,6 @@ public class DashboardController {
                                  .findFirst()
                                  .orElse(null);
         
-       System.out.println(email+role);
         
         List<Customer> customers = customerService.getAllCustomers(role, email);
         System.out.println(customers);
@@ -108,5 +116,27 @@ public class DashboardController {
         model.addAttribute("customers", customers);
         return "dashboard/customerdetails";
     }
+	
+	 @GetMapping("/dashboard/customerDetails/edit")
+	    public String getCustomerByEmail(@RequestParam String email, Model model) {
+	        Customer customer = customerService.getCustomerByEmail(email);
+	        List<Properties> properties = propertiesService.findAllProperties();
+	        if(customer.getPropertyId() == "null") {
+	        	Properties property = propertiesService.findPropertyById(customer.getPropertyId());
+		        String currentProperty = property.getTitle();
+		        model.addAttribute("property" , currentProperty);
+	        }
+	        
+	        model.addAttribute("properties", properties);
+	        model.addAttribute("customer", customer);
+	        return "dashboard/editcustomer";
+	    }
+
+	    @PostMapping("/dashboard/customerDetails/update")
+	    public String updateCustomer(@ModelAttribute Customer customer) {
+	    	System.out.println(customer.getEmail());
+	        customerService.updateCustomer(customer);
+	        return "redirect:/dashboard/customerDetails";
+	    }
 
 }

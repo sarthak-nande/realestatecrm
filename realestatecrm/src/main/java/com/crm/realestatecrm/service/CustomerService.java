@@ -8,4 +8,8 @@ public interface CustomerService {
 	boolean save(Customer customer);
 	
 	List<Customer> getAllCustomers(String userRole, String email);
+	
+	void updateCustomer(Customer customer);
+	
+	Customer getCustomerByEmail(String email);
 }

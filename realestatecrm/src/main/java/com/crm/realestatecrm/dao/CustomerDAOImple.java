@@ -18,11 +18,9 @@ import jakarta.transaction.Transactional;
 public class CustomerDAOImple implements CustomerDAO{
 	
 	private EntityManager entityManager;
-	private BCryptPasswordEncoder byBCryptPasswordEncoder;
 	
-	public CustomerDAOImple(EntityManager entityManager, BCryptPasswordEncoder byBCryptPasswordEncoder) {
+	public CustomerDAOImple(EntityManager entityManager) {
 		this.entityManager = entityManager;
-		this.byBCryptPasswordEncoder = byBCryptPasswordEncoder;
 	}
 
 	@Override
@@ -102,9 +100,48 @@ public class CustomerDAOImple implements CustomerDAO{
 	}
 	
 	
-	
-	
-	
+
+	@Transactional
+	public void updateCustomer(Customer customer) {
+		System.out.println(customer.getEmail());
+	    TypedQuery<Customer> query = entityManager.createQuery(
+	        "SELECT c FROM Customer c WHERE c.email = :email", Customer.class);
+	    query.setParameter("email", customer.getEmail());
+
+	    Customer results = query.getSingleResult(); // Avoid exception
+
+	    Customer existingCustomer = results;
+
+	    if (existingCustomer == null) {
+	        throw new RuntimeException("Customer not found for ID: " + customer.getCustomerId());
+	    }
+
+	    // Update fields only if they are provided in the request
+	    if (customer.getStatus() != null) {
+	        existingCustomer.setStatus(customer.getStatus());
+	    }
+	    if (customer.getBudgetRange() != null) {
+	        existingCustomer.setBudgetRange(customer.getBudgetRange());
+	    }
+	    if (customer.getLocationPreference() != null) {
+	        existingCustomer.setLocationPreference(customer.getLocationPreference());
+	    }
+	    if (customer.getPropertyId() != null) {
+	        existingCustomer.setPropertyId(customer.getPropertyId());
+	    }
+
+	    entityManager.merge(existingCustomer); // Save changes
+	}
+
+
+	@Override
+	public Customer getCustomerByEmail(String email) {
+		TypedQuery<Customer> query = entityManager.createQuery("select c from Customer c where c.email = :email" , Customer.class);
+		query.setParameter("email", email);
+		
+		Customer customer = query.getSingleResult();
+		return customer;
+	}
 	
 
 }

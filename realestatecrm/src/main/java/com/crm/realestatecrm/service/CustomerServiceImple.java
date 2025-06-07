@@ -26,4 +26,15 @@ public class CustomerServiceImple implements CustomerService{
 		return customerDAO.getAllCustomers(userRole, email);
 	}
 
+	@Override
+	public void updateCustomer(Customer customer) {
+		customerDAO.updateCustomer(customer);
+		
+	}
+
+	@Override
+	public Customer getCustomerByEmail(String email) {
+		return customerDAO.getCustomerByEmail(email);
+	}
+
 }
