@@ -14,4 +14,6 @@ public interface CustomerDAO {
 	void updateCustomer(Customer customer);
 	
 	Customer getCustomerByEmail(String email);
+	
+	List<String> getCreatedTime(String role, String email);
 }

@@ -60,15 +60,15 @@ public class CustomerDAOImple implements CustomerDAO{
 	public int getCustomerCount(String userRole, String email) {
 		int count = 0;
 		
-		if(userRole == "ROLE_SALES") {
-			TypedQuery<Customer> query = entityManager.createQuery("select s from Customer s where s.sales_exec_id = :email",Customer.class);
+		if(userRole.equals("ROLE_SALES")) {
+			TypedQuery<Customer> query = entityManager.createQuery("select s from Customer s where s.salesExecId = :email",Customer.class);
 			query.setParameter("email", email);
 			List<Customer> customers = query.getResultList();
 			count = customers.size();
 		}
 		
-		if(userRole == "ROLE_MANAGER") {
-			TypedQuery<Customer> query = entityManager.createQuery("select s from Customer s where s.manager_id = :email",Customer.class);
+		if(userRole.equals("ROLE_MANAGER")) {
+			TypedQuery<Customer> query = entityManager.createQuery("select s from Customer s where s.managerId = :email",Customer.class);
 			query.setParameter("email", email);
 			List<Customer> customers = query.getResultList();
 			count = customers.size();
@@ -103,7 +103,7 @@ public class CustomerDAOImple implements CustomerDAO{
 
 	@Transactional
 	public void updateCustomer(Customer customer) {
-		System.out.println(customer.getEmail());
+		
 	    TypedQuery<Customer> query = entityManager.createQuery(
 	        "SELECT c FROM Customer c WHERE c.email = :email", Customer.class);
 	    query.setParameter("email", customer.getEmail());
@@ -138,9 +138,18 @@ public class CustomerDAOImple implements CustomerDAO{
 	public Customer getCustomerByEmail(String email) {
 		TypedQuery<Customer> query = entityManager.createQuery("select c from Customer c where c.email = :email" , Customer.class);
 		query.setParameter("email", email);
-		
 		Customer customer = query.getSingleResult();
 		return customer;
+	}
+
+	@Override
+	public List<String> getCreatedTime(String role, String email) {
+		TypedQuery<String> query = entityManager.createQuery(
+			    "SELECT FUNCTION('DATE_FORMAT', c.createdAt, '%Y-%m-%d %H:%i:%s') FROM Customer c", String.class);
+			List<String> createdAtList = query.getResultList();
+
+
+		return createdAtList;
 	}
 	
 

@@ -37,4 +37,16 @@ public class CustomerServiceImple implements CustomerService{
 		return customerDAO.getCustomerByEmail(email);
 	}
 
+	@Override
+	public int getCustomerCount(String userRole, String mail) {
+		return customerDAO.getCustomerCount(userRole, mail);
+	}
+
+	@Override
+	public List<String> getCreatedTime(String role, String email) {
+		return customerDAO.getCreatedTime(role, email);
+	}
+	
+	
+
 }
