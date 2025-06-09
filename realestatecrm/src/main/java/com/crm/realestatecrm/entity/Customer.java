@@ -48,6 +48,9 @@ public class Customer {
 	@Column(name="location_preference")
 	private String locationPreference;
 	
+	@Column(name="created_at")
+	private String createdAt;
+	
 	public Customer() {
 		
 	}
@@ -225,6 +228,14 @@ public class Customer {
 
 	public void setLocationPreference(String locationPreference) {
 		this.locationPreference = locationPreference;
+	}
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 }
