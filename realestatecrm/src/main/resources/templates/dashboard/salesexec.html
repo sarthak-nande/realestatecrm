@@ -4,42 +4,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bootstrap Dashboard</title>
-<!-- Bootstrap CSS -->
+<title>Add Sales Executive</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</head>
 <style>
-#offcanvasMenu, .vh-100 {
-    height: 100vh; /* Ensure the sidebar fits the screen height */
-    overflow-y: auto; /* Prevent unnecessary overflow */
-}
-.col-md-2.bg-light.vh-100 {
-    height: 100vh; /* Ensure sidebar fits screen */
-    overflow-y: auto; /* Prevent excess height issues */
+/* Custom styles for the dashboard layout */
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 }
 
-
-.login-container {
-    max-width: 900px; /* Increased width */
-    width: 100%; /* Expands across screen */
-    padding: 30px; /* Provides comfortable spacing */
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+/* Offcanvas width for smaller screens */
+#offcanvasMenu {
+	--bs-offcanvas-width: 250px;
 }
 
+/* Sidebar for larger screens */
+.sidebar {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	background-color: #f8f9fa; /* Light grey background */
+	padding-top: 1rem;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navigation links styling */
+.nav-link {
+	transition: background-color 0.3s ease, color 0.3s ease;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	color: #343a40; /* Dark grey text */
+	padding: 0.75rem 1rem;
+}
+
+.nav-link:hover {
+	background-color: #e2e6ea; /* Lighter grey on hover */
+	color: #0056b3; /* Darker blue on hover */
+}
+
+.nav-link.active {
+	background-color: #007bff; /* Primary blue for active link */
+	color: white; /* White text for active link */
+}
+
+.nav-link i {
+	margin-right: 10px; /* Space between icon and text */
+	width: 20px; /* Fixed width for icons to align text */
+}
+
+/* Main content area */
+.main-content {
+	flex-grow: 1; /* Allows content to take up remaining space */
+	padding: 20px;
+	background-color: #e9ecef; /* Slightly darker background for content area */
+	display: flex; /* Use flexbox to center content vertically */
+	justify-content: center; /* Center content horizontally */
+	align-items: center; /* Center content vertically */
+	min-height: calc(100vh - 56px); /* Adjust based on navbar height */
+}
+
+/* Card specific styles for the form */
+.card {
+	border-radius: 15px; /* More rounded corners */
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+	border: none; /* Remove default border */
+	max-width: 900px; /* Increased width as per your original code */
+	width: 100%; /* Ensure it takes full width within its container */
+	padding: 2.5rem; /* Increase padding inside the card */
+	margin: auto; /* Center the card horizontally (though flexbox does this already) */
+	background: rgba(255, 255, 255, 0.9); /* From your original code */
+}
+
+.form-label {
+	font-weight: 600; /* Slightly bolder labels */
+	color: #495057; /* Darker grey for labels */
+	margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+	border-radius: 8px; /* Rounded input fields */
+	padding: 0.75rem 1rem; /* More padding inside inputs */
+	border: 1px solid #ced4da;
+	transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+	border-color: #80bdff; /* Bootstrap primary focus color */
+	box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Light blue shadow on focus */
+}
+
+.btn-primary {
+	background-color: #007bff; /* Standard primary blue */
+	border-color: #007bff;
+	padding: 0.75rem 1.5rem; /* Larger button padding */
+	font-size: 1.1rem; /* Slightly larger font size */
+	border-radius: 8px; /* Rounded button */
+	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+		transform 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3; /* Darker blue on hover */
+	border-color: #0056b3;
+	transform: translateY(-2px); /* Slight lift on hover */
+}
+
+h2 {
+	color: #007bff; /* Primary blue for the heading */
+	margin-bottom: 1.5rem;
+	font-weight: 700; /* Bold heading */
+}
+
+/* Alert messages */
+.alert {
+	border-radius: 8px;
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.5rem;
+}
+
+/* Logout button styling */
+.btn-transparent {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	color: #212529 !important; /* Adjust color as needed */
+	padding-left: 0;
+	padding-right: 0;
+	text-align: left;
+}
+
+.btn-transparent:hover {
+	color: #dc3545 !important; /* Red on hover for logout */
+	background-color: transparent !important;
+}
 </style>
-
-</style>
+</head>
 <body>
-	<!-- Navbar -->
-	<nav class="navbar navbar-dark bg-dark">
+	<nav class="navbar navbar-dark bg-dark shadow-sm">
 		<div class="container-fluid">
 			<button class="navbar-toggler d-md-none d-block" type="button"
 				data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
@@ -51,7 +156,6 @@
 		</div>
 	</nav>
 
-	<!-- Offcanvas Sidebar -->
 	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu"
 		aria-labelledby="offcanvasMenuLabel">
 		<div class="offcanvas-header">
@@ -61,24 +165,37 @@
 		</div>
 		<div class="offcanvas-body">
 			<ul class="nav flex-column">
-				<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 				<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
-					class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i>
-						Add Customer </a></li>
-				<li class="nav-item"><a class="nav-link" href="#"><i
+					class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+						class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+				<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+					class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i
+						class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/dashboard/customerDetails}"><i
 						class="fa-solid fa-circle-info"></i> Customer Details</a></li>
 				<li class="nav-item"><a class="nav-link" href="#"><i
-						class="fa-solid fa-fire"></i> Campaign</a></li>
-				<li class="nav-item"><a class="nav-link" href="#"><i
 						class="fa-solid fa-clock-rotate-left"></i> History</a></li>
-				<li class="nav-item"><a class="nav-link" href="#"><i
+				<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+					class="nav-link" th:href="@{/dashboard/createTask}"><i
+						class="fa-solid fa-list-check"></i> Create Task </a></li>
+				<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+					class="nav-link" th:href="@{/dashboard/dailytask}"><i
+						class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+				<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+					class="nav-link" th:href="@{/dashboard/dailytask}"><i
 						class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/dashboard/createTicket}">Create Ticket</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/dashboard/tickets}">Show Tickets</a></li>
 				<li class="nav-item"><a class="nav-link" href="#"><i
 						class="fa-solid fa-shuffle"></i> Track</a></li>
 				<li>
 					<form th:action="@{/logout}" method="post">
-						<button type="submit" class="btn border-0 bg-transparent nav-link">
+						<button type="submit" class="btn btn-transparent nav-link">
 							<i class="fas fa-sign-out-alt"></i> Logout
 						</button>
 					</form>
@@ -86,160 +203,154 @@
 			</ul>
 		</div>
 	</div>
-	<!-- Sidebar and Main Content -->
-	<div class="container-fluid ">
+
+	<div class="container-fluid">
 		<div class="row">
-			<!-- Sidebar -->
-			<div class="col-md-2 bg-light vh-100 d-md-block d-none">
+			<div class="col-md-2 sidebar d-none d-md-block">
 				<ul class="nav flex-column mt-3">
-					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
-							class="fa-solid fa-house"></i> Home</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
-						class="nav-link" href="#"><i class="fa-solid fa-user-plus"></i>
-							Add Customer </a></li>
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i class="fa-solid fa-user-plus"></i>
-							Add Sales-Exe </a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i
+						class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
 							class="fa-solid fa-circle-info"></i> Customer Details</a></li>
 					<li class="nav-item"><a class="nav-link" href="#"><i
-							class="fa-solid fa-fire"></i> Campaign</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i
-							class="fa-solid fa-clock-rotate-left"></i> History</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i
+						class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/createTask}"><i
+							class="fa-solid fa-list-check"></i> Create Task </a></li>
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}">Create Ticket</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/tickets}">Show Tickets</a></li>
 					<li class="nav-item"><a class="nav-link" href="#"><i
 							class="fa-solid fa-shuffle"></i> Track</a></li>
 					<li>
 						<form th:action="@{/logout}" method="post">
-							<button type="submit"
-								class="btn border-0 bg-transparent nav-link">
+							<button type="submit" class="btn btn-transparent nav-link">
 								<i class="fas fa-sign-out-alt"></i> Logout
 							</button>
 						</form>
 					</li>
-
 				</ul>
 			</div>
 
-
-			<!-- Main Content -->
-
-
-
-			<div class="col-md-10">
-				<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
-					<div class="login-container">
-						<div th:if="${success}" class="alert alert-success" role="alert">
-							<span th:text="${success}"></span>
-						</div>
-						<div th:if="${error}" class="alert alert-danger" role="alert">
-							<span th:text="${error}"></span>
-						</div>
-						<h2 class="text-center mb-4">Sales Executive</h2>
-
-						<form th:action="@{/dashboard/addSalesExec}"
-							th:object="${salesExecutive}" method="post"
-							onsubmit="return validatePasswords()">
-							<div class="row">
-								<!-- First Name -->
-								<div class="col-md-6 col-12 mb-3">
-									<label for="firstName" class="form-label">First Name</label> <input
-										type="text" th:field="*{firstName}" class="form-control"
-										id="firstName" required>
-								</div>
-
-								<!-- Last Name -->
-								<div class="col-md-6 col-12 mb-3">
-									<label for="lastName" class="form-label">Last Name</label> <input
-										type="text" th:field="*{lastName}" class="form-control"
-										id="lastName" required>
-								</div>
-							</div>
-
-							<div class="row">
-								<!-- Email -->
-								<div class="col-md-6 col-12 mb-3">
-									<label for="email" class="form-label">Email</label> <input
-										type="email" th:field="*{email}" class="form-control"
-										id="email" required>
-								</div>
-
-								<!-- Mobile Number -->
-								<div class="col-md-6 col-12 mb-3">
-									<label for="mobileNumber" class="form-label">Mobile
-										Number</label> <input type="number" th:field="*{mobileNumber}"
-										class="form-control" id="mobileNumber" required>
-								</div>
-							</div>
-
-							<div class="row">
-								<!-- Password -->
-								<div class="col-md-6 col-12 mb-3">
-									<label for="password" class="form-label">Password</label>
-									<div class="input-group">
-										<input type="password" th:field="*{password}"
-											class="form-control" id="password" required>
-										<button type="button" class="btn btn-outline-secondary"
-											onclick="togglePassword('password')">
-											<i class="fa-solid fa-eye"></i>
-										</button>
-									</div>
-								</div>
-
-								<!-- Confirm Password -->
-								<div class="col-md-6 col-12 mb-3">
-									<label for="confirmPassword" class="form-label">Retype
-										Password</label> <input type="password" class="form-control"
-										id="confirmPassword" required>
-									<div class="text-danger mt-1" id="error-message"></div>
-								</div>
-							</div>
-
-							<!-- Submit Button -->
-							<div class="text-center text-md-end mt-3">
-								<button type="submit" class="btn btn-primary w-100 w-md-auto">Create
-									Sales Executive</button>
-							</div>
-						</form>
-
+			<div class="col-md-10 main-content">
+				<div class="card shadow-lg">
+					<div th:if="${success}" class="alert alert-success" role="alert">
+						<span th:text="${success}"></span>
 					</div>
-				</div>
+					<div th:if="${error}" class="alert alert-danger" role="alert">
+						<span th:text="${error}"></span>
+					</div>
+					<h2 class="text-center text-primary mb-4">Add Sales Executive</h2>
 
+					<form th:action="@{/dashboard/addSalesExec}"
+						th:object="${salesExecutive}" method="post"
+						onsubmit="return validatePasswords()">
+						<div class="row">
+							<div class="col-md-6 col-12 mb-3">
+								<label for="firstName" class="form-label">First Name</label> <input
+									type="text" th:field="*{firstName}" class="form-control"
+									id="firstName" required>
+							</div>
+
+							<div class="col-md-6 col-12 mb-3">
+								<label for="lastName" class="form-label">Last Name</label> <input
+									type="text" th:field="*{lastName}" class="form-control"
+									id="lastName" required>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 col-12 mb-3">
+								<label for="email" class="form-label">Email</label> <input
+									type="email" th:field="*{email}" class="form-control"
+									id="email" required>
+							</div>
+
+							<div class="col-md-6 col-12 mb-3">
+								<label for="mobileNumber" class="form-label">Mobile
+									Number</label> <input type="number" th:field="*{mobileNumber}"
+									class="form-control" id="mobileNumber" required>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 col-12 mb-3">
+								<label for="password" class="form-label">Password</label>
+								<div class="input-group">
+									<input type="password" th:field="*{password}"
+										class="form-control" id="password" required>
+									<button type="button" class="btn btn-outline-secondary"
+										onclick="togglePassword('password')">
+										<i class="fa-solid fa-eye"></i>
+									</button>
+								</div>
+							</div>
+
+							<div class="col-md-6 col-12 mb-3">
+								<label for="confirmPassword" class="form-label">Retype
+									Password</label> <input type="password" class="form-control"
+									id="confirmPassword" required>
+								<div class="text-danger mt-1" id="error-message"></div>
+							</div>
+						</div>
+
+						<div class="text-center mt-3">
+							<button type="submit" class="btn btn-primary w-100">Create
+								Sales Executive</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Bootstrap JS -->
-
-</body>
-
-<script>
-	function togglePassword(fieldId) {
-		var field = document.getElementById(fieldId);
-		field.type = field.type === "password" ? "text" : "password";
-	}
-
-	function validatePasswords() {
-		var password = document.getElementById("password").value;
-		var confirmPassword = document.getElementById("confirmPassword").value;
-		var errorMessage = document.getElementById("error-message");
-
-		if (password !== confirmPassword) {
-			errorMessage.textContent = "Passwords do not match!";
-			return false;
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function togglePassword(fieldId) {
+			var field = document.getElementById(fieldId);
+			field.type = field.type === "password" ? "text" : "password";
 		}
-		return true;
-	}
 
-	window
-			.addEventListener(
-					'pageshow',
-					function(event) {
-						if (event.persisted
-								|| (window.performance && window.performance.navigation.type === 2)) {
-							window.location.reload();
-						}
-					});
-</script>
+		function validatePasswords() {
+			var password = document.getElementById("password").value;
+			var confirmPassword = document.getElementById("confirmPassword").value;
+			var errorMessage = document.getElementById("error-message");
+
+			if (password !== confirmPassword) {
+				errorMessage.textContent = "Passwords do not match!";
+				return false;
+			}
+			errorMessage.textContent = ""; // Clear error message if passwords match
+			return true;
+		}
+
+		window.addEventListener('pageshow', function(event) {
+			if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+				window.location.reload();
+			}
+		});
+
+		// Ensure the sidebar remains visible on page load for larger screens
+		window.addEventListener('load', function() {
+			if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
+				document.getElementById('offcanvasMenu').classList.remove('show');
+			}
+		});
+	</script>
+</body>
 </html>

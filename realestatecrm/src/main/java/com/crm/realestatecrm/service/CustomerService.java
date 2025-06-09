@@ -12,4 +12,8 @@ public interface CustomerService {
 	void updateCustomer(Customer customer);
 	
 	Customer getCustomerByEmail(String email);
+	
+	int getCustomerCount(String userRole, String mail);
+	
+	List<String> getCreatedTime(String role, String email);
 }
