@@ -161,39 +161,49 @@ h2 {
 			<ul class="nav flex-column">
 				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
-				<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
-					class="nav-link" th:href="@{/dashboard/addcustomer}"><i
-						class="fa-solid fa-user-plus"></i> Add Customer </a></li>
-				<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-					class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
-						class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
-				<li class="nav-item"><a class="nav-link"
-					th:href="@{/dashboard/customerDetails}"><i
-						class="fa-solid fa-circle-info"></i> Customer Details</a></li>
-				<li class="nav-item"><a class="nav-link" href="#"><i
-						class="fa-solid fa-clock-rotate-left"></i> History</a></li>
-				<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-					class="nav-link" th:href="@{/dashboard/createTask}"><i
-						class="fa-solid fa-list-check"></i> Create Task </a></li>
-				<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-					class="nav-link" th:href="@{/dashboard/dailytask}"><i
-						class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
-				<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
-					class="nav-link" th:href="@{/dashboard/dailytask}"><i
-						class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
-				<li class="nav-item"><a class="nav-link"
-					th:href="@{/dashboard/createTicket}">Create Ticket</a></li>
-				<li class="nav-item"><a class="nav-link active"
-					th:href="@{/dashboard/tickets}">Show Tickets</a></li>
-				<li class="nav-item"><a class="nav-link" href="#"><i
-						class="fa-solid fa-shuffle"></i> Track</a></li>
-				<li>
-					<form th:action="@{/logout}" method="post">
-						<button type="submit" class="btn btn-transparent nav-link">
-							<i class="fas fa-sign-out-alt"></i> Logout
-						</button>
-					</form>
-				</li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
 			</ul>
 		</div>
 	</div>
@@ -204,32 +214,42 @@ h2 {
 				<ul class="nav flex-column mt-3">
 					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
+						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
 						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
 							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
 						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
 							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/customerDetails}"><i
-							class="fa-solid fa-circle-info"></i> Customer Details</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i
-						class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link" th:href="@{/dashboard/createTask}"><i
-							class="fa-solid fa-list-check"></i> Create Task </a></li>
+						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
 						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
 						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
-					<li class="nav-item"><a class="nav-link"
-						th:href="@{/dashboard/createTicket}">Create Ticket</a></li>
+					
 					<li class="nav-item"><a class="nav-link active"
-						th:href="@{/dashboard/tickets}">Show Tickets</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"><i
-							class="fa-solid fa-shuffle"></i> Track</a></li>
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
 					<li>
 						<form th:action="@{/logout}" method="post">
 							<button type="submit" class="btn btn-transparent nav-link">

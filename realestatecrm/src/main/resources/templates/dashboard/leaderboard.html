@@ -130,6 +130,147 @@ body {
 	color: #dc3545 !important; /* Red on hover for logout */
 	background-color: transparent !important;
 }
+
+/* --- Leaderboard Pillars and Table Styling --- */
+
+.pillar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px; /* Increased margin for better separation */
+    gap: 30px; /* Space between pillars */
+}
+
+.pillar {
+    width: 280px; /* Slightly wider pillars */
+    height: 380px; /* Taller pillars */
+    text-align: center;
+    padding: 30px; /* More padding inside */
+    border-radius: 15px; /* Softer rounded corners */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative; /* For the trophy icon positioning */
+    overflow: hidden; /* Ensures no overflow from pseudo-elements */
+}
+
+.pillar:hover {
+    transform: translateY(-10px); /* Lift on hover */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
+
+/* Trophy icon styling for each pillar */
+.pillar::before {
+    font-family: "Font Awesome 6 Free"; /* Ensure Font Awesome is correctly loaded */
+    font-weight: 900;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 3.5rem; /* Larger trophy icon */
+    opacity: 0.2; /* Subtle background icon */
+    color: rgba(255, 255, 255, 0.8);
+    z-index: 0;
+}
+
+.pillar.gold::before { content: "\f091"; } /* Gold trophy */
+.pillar.silver::before { content: "\f091"; } /* Silver trophy */
+.pillar.bronze::before { content: "\f091"; } /* Bronze trophy */
+
+.pillar h3 {
+    font-size: 2rem; /* Larger rank text */
+    margin-bottom: 15px;
+    z-index: 1; /* Bring text above pseudo-element */
+    position: relative;
+}
+
+.pillar h4 {
+    font-size: 1.6rem; /* Larger name text */
+    margin-bottom: 10px;
+    font-weight: bold;
+    z-index: 1;
+    position: relative;
+}
+
+.pillar p {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    z-index: 1;
+    position: relative;
+}
+
+.gold {
+    background: linear-gradient(to bottom right, #FFD700, #DAA520); /* Gradient for gold */
+    border: 3px solid #FFC107;
+}
+.silver {
+    background: linear-gradient(to bottom right, #C0C0C0, #A9A9A9); /* Gradient for silver */
+    border: 3px solid #B0B0B0;
+}
+.bronze {
+    background: linear-gradient(to bottom right, #CD7F32, #8B4513); /* Gradient for bronze */
+    border: 3px solid #A0522D;
+}
+
+/* Table Styling */
+.table-container {
+    margin-top: 40px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures rounded corners apply to table */
+}
+
+.table {
+    margin-bottom: 0; /* Remove default table bottom margin */
+}
+
+.table thead th {
+    background-color: #007bff; /* Primary blue for header */
+    color: white;
+    font-weight: bold;
+    padding: 1rem 1.5rem; /* More padding for header cells */
+    vertical-align: middle;
+    border-bottom: none; /* Remove default border */
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Light stripe for readability */
+}
+
+.table tbody tr:hover {
+    background-color: #e9ecef; /* Subtle hover effect */
+}
+
+.table tbody td {
+    padding: 1rem 1.5rem; /* More padding for body cells */
+    vertical-align: middle;
+    color: #343a40; /* Darker text for content */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03); /* Lighter stripe for odd rows */
+}
+
+.table-bordered th,
+.table-bordered td {
+    border-color: #dee2e6; /* Consistent border color */
+}
+
+/* Ensure no style changes to the menu bar */
+/* Styles for offcanvas and sidebar menu links are explicitly kept as per original */
+.navbar,
+.offcanvas,
+.sidebar {
+    /* No changes here, preserving original menu bar styles */
+}
 </style>
 </head>
 <body>
@@ -154,7 +295,7 @@ body {
 		</div>
 		<div class="offcanvas-body">
 			<ul class="nav flex-column">
-				<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -190,7 +331,7 @@ body {
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
 						
-					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					<li class="nav-item"><a class="nav-link active"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
 					
 					<li>
 						<form th:action="@{/logout}" method="post">
@@ -208,7 +349,7 @@ body {
 			<div class="col-md-2 sidebar d-none d-md-block">
 				<ul class="nav flex-column mt-3">
 				
-					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -244,7 +385,7 @@ body {
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
 						
-					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
 					
 					<li>
 						<form th:action="@{/logout}" method="post">
@@ -255,73 +396,55 @@ body {
 					</li>
 				</ul>
 			</div>
-
+		
 			<div class="col-md-10 main-content">
-				<div class="container mt-4">
-					
+				<div class="container mt-5">
+        <h2 class="text-center text-primary mb-5">Sales Executive Leaderboard</h2>
 
-					<div class="row g-4 mb-5">
-						<div class="col-md-6 col-lg-4">
-							<div class="card stats-card bg-white">
-								<div class="card-body d-flex align-items-center">
-									<i class="fas fa-users"></i>
-									<div>
-										<h5 class="card-title">Total Customers</h5>
-										<h3 class="display-4" th:text="${customerCount}"></h3>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div sec:authorize="hasAuthority('ROLE_MANAGER')" class="col-md-6 col-lg-4">
-							<div class="card stats-card bg-white">
-								<div class="card-body d-flex align-items-center">
-									<i class="fas fa-handshake"></i>
-									<div>
-										<h5 class="card-title">Sales Executives</h5>
-										<h3 class="display-4" th:text="${salesExecutiveCount}"></h3>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div sec:authorize="hasAuthority('ROLE_SALES')" class="col-md-6 col-lg-4">
-							<div class="card stats-card bg-white">
-								<div class="card-body d-flex align-items-center">
-									<i class="fa-solid fa-ticket"></i>
-									<div>
-										<h5 class="card-title">Open Tickets</h5>
-										<h3 class="display-4" th:text="${openTicketCount}"></h3>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 col-lg-4">
-							<div class="card stats-card bg-white">
-								<div class="card-body d-flex align-items-center">
-									<i class="fas fa-hourglass-half"></i>
-									<div>
-										<h5 class="card-title">Pending Tasks</h5>
-										<h3 class="display-4" th:text="${pendingTasks}"></h3>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+        <div class="pillar-container">
+            <div class="pillar gold" th:if="${leaderBoard.size() > 0}" th:object="${leaderBoard[0]}">
+                <h3>🏆 1st Place</h3>
+                <h4 th:text="*{salesExecutive.firstName + ' ' + salesExecutive.lastName}"></h4>
+                <p>Tasks Completed: <span th:text="*{taskCount}"></span></p>
+                <p>Customers Registered: <span th:text="*{custmerCount}"></span></p>
+            </div>
 
-					<div class="row g-4">
-						<div class="col-lg-6">
-							<div class="chart-container">
-								<canvas id="customerRegistrationChart"></canvas>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="chart-container">
-								<canvas id="taskStatusChart"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+            <div class="pillar silver" th:if="${leaderBoard.size() > 1}" th:object="${leaderBoard[1]}">
+                <h3>🥈 2nd Place</h3>
+                <h4 th:text="*{salesExecutive.firstName + ' ' + salesExecutive.lastName}"></h4>
+                <p>Tasks Completed: <span th:text="*{taskCount}"></span></p>
+                <p>Customers Registered: <span th:text="*{custmerCount}"></span></p>
+            </div>
+
+            <div class="pillar bronze" th:if="${leaderBoard.size() > 2}" th:object="${leaderBoard[2]}">
+                <h3>🥉 3rd Place</h3>
+                <h4 th:text="*{salesExecutive.firstName + ' ' + salesExecutive.lastName}"></h4>
+                <p>Tasks Completed: <span th:text="*{taskCount}"></span></p>
+                <p>Customers Registered: <span th:text="*{custmerCount}"></span></p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Tasks Completed</th>
+                        <th>Customers Registered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="exec, iterStat : ${leaderBoard}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${exec.salesExecutive.firstName + ' ' + exec.salesExecutive.lastName}"></td>
+                        <td th:text="${exec.taskCount}"></td>
+                        <td th:text="${exec.custmerCount}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 	</div>
 
 	<script
