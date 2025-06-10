@@ -20,7 +20,7 @@ public class AdminController {
         this.adminService = adminService;
     }
     
-    @GetMapping("/dashboard/GetAllManager")
+    @GetMapping("/admin")
     public String adminDashboard(@RequestParam(name = "email", required = false) String email, Model model) {
         List<Manager> managers;
         List<SalesExecutive> salesExecutives;
@@ -53,8 +53,8 @@ public class AdminController {
         adminService.updateUserStatus(email, enabled);
         // If a searchEmail is provided, redirect back to the search so that the sales executives remain visible
         if (searchEmail != null && !searchEmail.trim().isEmpty()){
-            return "redirect:/dashboard/GetAllManager?email=" + searchEmail;
+            return "redirect:/admin?email=" + searchEmail;
         }
-        return "redirect:/dashboard/GetAllManager";
+        return "redirect:/admin";
     }
 }
