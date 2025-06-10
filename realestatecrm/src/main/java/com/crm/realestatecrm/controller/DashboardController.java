@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,6 +24,7 @@ import com.crm.realestatecrm.dao.SalesExecutiveDAO;
 import com.crm.realestatecrm.entity.Customer;
 import com.crm.realestatecrm.entity.CustomerFeedback;
 import com.crm.realestatecrm.entity.CustomerSupportTickets;
+import com.crm.realestatecrm.entity.LeaderBoard;
 import com.crm.realestatecrm.entity.Manager;
 import com.crm.realestatecrm.entity.Properties;
 import com.crm.realestatecrm.entity.SalesExecutive;
@@ -413,5 +415,63 @@ public class DashboardController {
 	    	return "redirect:/dashboard/customerDetails";
 	    }
 	    
+	    @GetMapping("dashboard/salesExecutice")
+	    public String loadAllSalesExecutive() {
+	    	return "null";
+	    }
+	    
+	    @GetMapping("dashboard/leaderboard")
+	    public String loadLeaderBoard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+	    	String email = userDetails.getUsername();
+	        String role = userDetails.getAuthorities().stream()
+	                                  .map(GrantedAuthority::getAuthority)
+	                                  .findFirst()
+	                                  .orElse(null);
+	        
+	        List<LeaderBoard> leaderBoard = new ArrayList<>();
+	        
+	        if(role.equals("ROLE_MANAGER")) {
+	        	leaderBoard = salesExecutiveService.getLeadboradList(email);
+	        }
+	        
+	        if(role.equals("ROLE_SALES")) {
+	        	SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveByEmail(email);
+	        	String managerEmail = salesExecutive.getManagerEmail();
+	        	leaderBoard = salesExecutiveService.getLeadboradList(managerEmail);
+	        }
+	        
+	        model.addAttribute("leaderBoard", leaderBoard);
+	    	
+	    	return "dashboard/leaderboard";
+	    }
+	    
+	    @GetMapping("dashboard/salesexecutivedetails")
+	    public String loadSalesExecutive(Model model) {
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    	String email = authentication.getName();
+	    	
+	    	List<SalesExecutive> salesExecutives = salesExecutiveService.getAllSalesExecutives(email);
+	    	
+	    	model.addAttribute("salesExecutives", salesExecutives);
+	    	return "dashboard/salesexecutivedetails";
+	    }
+	    
+	    @GetMapping("/dashboard/salesexecutivedetails/edit/{id}")
+	    public String editSalesExecutive(@PathVariable("id") String salesExecId, Model model) {
+	        SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveById(salesExecId);
+	        
+	        model.addAttribute("salesExecutive", salesExecutive);
+	        return "dashboard/editsalesexecutive"; // Return edit page
+	    }
+	    
+	    @PostMapping("/dashboard/salesexecutivedetails/edit")
+	    public String editSalesExecutiveId(@ModelAttribute SalesExecutive salesExecutive) {
+	    	SalesExecutive extingSalesExecutive = salesExecutiveService.findSalesExecutiveById(salesExecutive.getSalesExecId());
+	    	extingSalesExecutive.setFirstName(salesExecutive.getFirstName());
+	    	extingSalesExecutive.setLastName(salesExecutive.getLastName());
+	    	extingSalesExecutive.setMobileNumber(salesExecutive.getMobileNumber());
+	    	salesExecutiveService.updateSalesExective(extingSalesExecutive);
+	    	return "redirect:/dashboard/salesexecutivedetails";
+	    }
 
 }

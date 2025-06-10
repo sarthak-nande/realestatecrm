@@ -67,5 +67,7 @@ public class CustomerFeedBackDAOImple implements CustomerFeedbackDAO{
 		CustomerFeedback customerFeedback = query.getSingleResult();
 		return customerFeedback;
 	}
+	
+	
 
 }
