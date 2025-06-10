@@ -122,7 +122,13 @@ public class DashboardController {
         List<Long> customerRegData = IntStream.rangeClosed(1, daysInMonth)
                                           .mapToObj(day -> dailyCustomerRegistrationsMap.get(day))
                                           .collect(Collectors.toList());
+        
+        List<CustomerSupportTickets> customerSupportTickets = customerSupportTicketService.getAllTickets(email,role);
+        
+        List<CustomerSupportTickets> openTickets = customerSupportTickets.stream().filter(n -> n.getStatus().equals("Open")).toList();
+		int openTicketCount = openTickets.size();
 		
+		model.addAttribute("openTicketCount" , openTicketCount);
 	    model.addAttribute("customerCount" , customerCount);
 	    model.addAttribute("salesExecutiveCount" , salesExecutiveCount);
 	    model.addAttribute("pendingTasks", pendingTasks);

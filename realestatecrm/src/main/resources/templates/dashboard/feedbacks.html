@@ -165,7 +165,7 @@ body {
 		</div>
 		<div class="offcanvas-body">
 			<ul class="nav flex-column">
-				<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -198,7 +198,7 @@ body {
 						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
 						
 					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
@@ -218,7 +218,7 @@ body {
 		<div class="row">
 			<div class="col-md-2 sidebar d-none d-md-block">
 				<ul class="nav flex-column mt-3">
-					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -251,7 +251,7 @@ body {
 						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
 						
 					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>

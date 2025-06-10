@@ -159,7 +159,7 @@ body {
 		</div>
 		<div class="offcanvas-body">
 			<ul class="nav flex-column">
-				<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -174,7 +174,7 @@ body {
 						th:href="@{/dashboard/salesexecutivedetails}"><i
 							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/customerDetails}"><i
 							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
 					
@@ -212,7 +212,7 @@ body {
 		<div class="row">
 			<div class="col-md-2 sidebar d-none d-md-block">
 				<ul class="nav flex-column mt-3">
-					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -227,7 +227,7 @@ body {
 						th:href="@{/dashboard/salesexecutivedetails}"><i
 							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/customerDetails}"><i
 							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
 					

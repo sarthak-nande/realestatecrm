@@ -157,7 +157,7 @@ h2 {
 		</div>
 		<div class="offcanvas-body">
 			<ul class="nav flex-column">
-				<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -177,7 +177,7 @@ h2 {
 							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
 					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						class="nav-link active" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
 						
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
@@ -210,7 +210,7 @@ h2 {
 		<div class="row">
 			<div class="col-md-2 sidebar d-none d-md-block">
 				<ul class="nav flex-column mt-3">
-					<li class="nav-item"><a class="nav-link active" th:href="@{/dashboard}"><i
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
 						class="fa-solid fa-house"></i> Home</a></li>
 						
 					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
@@ -230,7 +230,7 @@ h2 {
 							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
 					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						class="nav-link active" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
 						
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
