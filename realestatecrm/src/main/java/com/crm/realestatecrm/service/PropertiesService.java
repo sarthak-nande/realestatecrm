@@ -8,7 +8,7 @@ import com.crm.realestatecrm.entity.Properties;
 public interface PropertiesService {
 	void save(Properties properties);
 	
-	List<Properties> findAllProperties();
+	List<Properties> findAllProperties(String managerId);
 	
 	Properties findPropertyById(String id);
 }

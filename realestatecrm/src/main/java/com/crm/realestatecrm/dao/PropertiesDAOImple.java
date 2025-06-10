@@ -9,6 +9,7 @@ import com.crm.realestatecrm.entity.Properties;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 @Repository
 public class PropertiesDAOImple implements PropertiesDAO{
@@ -26,8 +27,9 @@ public class PropertiesDAOImple implements PropertiesDAO{
 	}
 
 	@Override
-	public List<Properties> findAllProperties() {
-		TypedQuery<Properties> query = entityManager.createQuery("select p from Properties p" , Properties.class);
+	public List<Properties> findAllProperties(String managerId) {
+		TypedQuery<Properties> query = entityManager.createQuery("select p from Properties p WHERE p.managerId = :managerId" , Properties.class);
+		query.setParameter("managerId", managerId);
 		List<Properties> properties = query.getResultList();
 		return properties;
 	}
@@ -40,6 +42,12 @@ public class PropertiesDAOImple implements PropertiesDAO{
 	    
 	    List<Properties> results = query.getResultList();
 	    return results.isEmpty() ? null : results.get(0); // Avoid exception
+	}
+
+	@Override
+	@Transactional
+	public void updateProperties(Properties properties) {
+		entityManager.merge(properties);
 	}
 
 

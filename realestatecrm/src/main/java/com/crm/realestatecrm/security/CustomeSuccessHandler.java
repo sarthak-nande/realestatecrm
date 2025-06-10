@@ -32,6 +32,10 @@ public class CustomeSuccessHandler implements AuthenticationSuccessHandler{
                 redirectUrl = "/dashboard";
                 break;
             }
+            else if (role.equals("ROLE_SALES")) {
+                redirectUrl = "/dashboard";
+                break;
+            }
         }
 
         response.sendRedirect(request.getContextPath() + redirectUrl);

@@ -129,8 +129,15 @@ public class CustomerDAOImple implements CustomerDAO{
 	    if (customer.getPropertyId() != null) {
 	        existingCustomer.setPropertyId(customer.getPropertyId());
 	    }
+	    if (customer.getFirstName() != null) {
+	        existingCustomer.setFirstName(customer.getFirstName());
+	    }
+	    
+	    if (customer.getLastName() != null) {
+	        existingCustomer.setLastName(customer.getLastName());
+	    }
 
-	    entityManager.merge(existingCustomer); // Save changes
+	    entityManager.merge(existingCustomer);
 	}
 
 
