@@ -277,15 +277,11 @@ h2 {
 								Customer ID</label> <input type="text" class="form-control"
 								th:field="*{customerId}" readonly>
 						</div>
-
+						
 						<div class="mb-3" sec:authorize="hasRole('ROLE_MANAGER')">
-							<label class="form-label"><i class="fas fa-users"></i>
-								Sales Executive</label> <select class="form-select"
-								th:field="*{salesExectiveId}">
-								<option th:each="executive : ${salesExecutives}"
-									th:value="${executive.email}"
-									th:text="${executive.firstName + ' ' + executive.lastName}"></option>
-							</select>
+							<label class="form-label"><i class="fas fa-user"></i>
+								Sales Executive ID</label> <input type="text" class="form-control"
+								th:value="${salesExec}" readonly>
 						</div>
 
 						<div class="mb-3">

@@ -59,6 +59,8 @@ public class CustomerSupportTicketDAOImple implements CustomerSupportTicketDAO{
 	    CustomerSupportTickets results = query.getSingleResult();
 
 	    CustomerSupportTickets existingCustomer = results;
+	    
+	    System.out.println(customerSupportTickets.getSalesExectiveId());
 
 	    if (existingCustomer == null) {
 	        throw new RuntimeException("Customer not found for ID: " + customerSupportTickets.getTicketId());
@@ -68,7 +70,19 @@ public class CustomerSupportTicketDAOImple implements CustomerSupportTicketDAO{
 	        existingCustomer.setStatus(customerSupportTickets.getStatus());
 	    }
 	    
-		entityManager.merge(customerSupportTickets);
+	    if (customerSupportTickets.getSalesExectiveId() != null) {
+	        existingCustomer.setSalesExectiveId(customerSupportTickets.getSalesExectiveId());
+	    }
+	    
+	    if (customerSupportTickets.getIssueCategory() != null) {
+	        existingCustomer.setIssueCategory(customerSupportTickets.getIssueCategory());
+	    }
+	    
+	    if (customerSupportTickets.getDiscription() != null) {
+	        existingCustomer.setDiscription(customerSupportTickets.getDiscription());
+	    }
+	    
+		entityManager.merge(existingCustomer);
 	}
 
 	@Override

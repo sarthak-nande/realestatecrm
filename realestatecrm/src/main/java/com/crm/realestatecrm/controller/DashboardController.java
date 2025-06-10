@@ -165,11 +165,24 @@ public class DashboardController {
 	}
 	
 	@GetMapping("/dashboard/addcustomer")
-	public String showCustomerAddForm(@ModelAttribute Customer customer,Model model) {
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    String username = authentication.getName();
-	    
-	    List<Properties> properties = propertiesService.findAllProperties();
+	public String showCustomerAddForm(@ModelAttribute Customer customer,Model model, @AuthenticationPrincipal UserDetails userDetails) {
+		String email = userDetails.getUsername();
+        String role = userDetails.getAuthorities().stream()
+                                  .map(GrantedAuthority::getAuthority)
+                                  .findFirst()
+                                  .orElse(null);
+        
+        List<Properties> properties = new ArrayList<>();
+        
+        if(role.equals("ROLE_MANAGER")) {
+        	properties = propertiesService.findAllProperties(email);
+        }
+        
+        if(role.equals("ROLE_SALES")) {
+        	SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveByEmail(email);
+        	String managerEmail = salesExecutive.getManagerEmail();
+        	properties = propertiesService.findAllProperties(managerEmail);
+        }
 	    
 	    model.addAttribute("properties", properties);
 
@@ -208,10 +221,27 @@ public class DashboardController {
     }
 	
 	 @GetMapping("/dashboard/customerDetails/edit")
-	    public String getCustomerByEmail(@RequestParam String email, Model model) {
+	    public String getCustomerByEmail(@RequestParam String email, Model model, @AuthenticationPrincipal UserDetails userDetails) {
 	        Customer customer = customerService.getCustomerByEmail(email);
-	        List<Properties> properties = propertiesService.findAllProperties();
-	        if(customer.getPropertyId() == "null") {
+	        String email1 = userDetails.getUsername();
+	        String role = userDetails.getAuthorities().stream()
+	                                  .map(GrantedAuthority::getAuthority)
+	                                  .findFirst()
+	                                  .orElse(null);
+	        
+	        List<Properties> properties = new ArrayList<>();
+	        
+	        if(role.equals("ROLE_MANAGER")) {
+	        	properties = propertiesService.findAllProperties(email1);
+	        }
+	        
+	        if(role.equals("ROLE_SALES")) {
+	        	SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveByEmail(email1);
+	        	String managerEmail = salesExecutive.getManagerEmail();
+	        	properties = propertiesService.findAllProperties(managerEmail);
+	        }
+	        
+	        if(customer.getPropertyId().equals("null")) {
 	        	Properties property = propertiesService.findPropertyById(customer.getPropertyId());
 		        String currentProperty = property.getTitle();
 		        model.addAttribute("property" , currentProperty);
@@ -311,6 +341,7 @@ public class DashboardController {
 	                                  .map(GrantedAuthority::getAuthority)
 	                                  .findFirst()
 	                                  .orElse(null);
+	        
 	        if(role.equals("ROLE_SALES")) {
 	        	ticket.setSalesExectiveId(email);
 	        	SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveByEmail(email);
@@ -318,6 +349,7 @@ public class DashboardController {
 	        }
 	        
 	        ticket.setManagerId(email);
+	        ticket.setStatus("Open");
 	        
 	        customerSupportTicketService.saveTicket(ticket);
 	        return "redirect:/dashboard/createTicket";
@@ -345,8 +377,12 @@ public class DashboardController {
 	    	String email = authentication.getName();
 	    	
 	    	List<SalesExecutive> salesExecutives = salesExecutiveService.getAllSalesExecutives(email);
-	    	model.addAttribute("salesExecutives", salesExecutives);
+	    	
+	    	
 	    	CustomerSupportTickets customerSupportTicket = customerSupportTicketService.findTicketById(ticket);
+	    	String salesExec = customerSupportTicket.getSalesExectiveId(); 
+	    	model.addAttribute("salesExec", salesExec);
+	    	model.addAttribute("salesExecutives", salesExecutives);
 	    	model.addAttribute("customerSupportTicket" , customerSupportTicket);
 			return "dashboard/editticket";
 	    }
@@ -479,5 +515,60 @@ public class DashboardController {
 	    	salesExecutiveService.updateSalesExective(extingSalesExecutive);
 	    	return "redirect:/dashboard/salesexecutivedetails";
 	    }
-
+	    
+	    @GetMapping("/dashboard/properties")
+	    public String loadProperties(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+	    	String email = userDetails.getUsername();
+	        String role = userDetails.getAuthorities().stream()
+	                                  .map(GrantedAuthority::getAuthority)
+	                                  .findFirst()
+	                                  .orElse(null);
+	        
+	        List<Properties> properties = new ArrayList<>();
+	        
+	        if(role.equals("ROLE_MANAGER")) {
+	        	properties = propertiesService.findAllProperties(email);
+	        }
+	        
+	        if(role.equals("ROLE_SALES")) {
+	        	SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveByEmail(email);
+	        	String managerEmail = salesExecutive.getManagerEmail();
+	        	properties = propertiesService.findAllProperties(managerEmail);
+	        }
+	        
+	        model.addAttribute("leaderBoard", properties);
+	    	
+	    	return "dashboard/properties";
+	    }
+	    
+	    @GetMapping("/dashboard/addproperty")
+	    public String addProperties(Model model) {
+	        model.addAttribute("properties", new Properties());
+	        
+	        return "dashboard/addaddproperty";
+	    }
+	    
+	    @PostMapping("/dashboard/addproperty")
+	    public String saveProperties(@ModelAttribute Properties properties,  @AuthenticationPrincipal UserDetails userDetails) {
+	    	String email = userDetails.getUsername();
+	        String role = userDetails.getAuthorities().stream()
+	                                  .map(GrantedAuthority::getAuthority)
+	                                  .findFirst()
+	                                  .orElse(null);
+	        
+	        properties.setManagerId(email);
+	        
+	        return "dashboard/addaddproperty";
+	    }
+	    
+	    @GetMapping("/dashboard/properties/edit/{id}")
+	    public String addProperties(Model model, @PathVariable("id") String propertyId) {
+	    	Properties properties = propertiesService.findPropertyById(propertyId);
+	        model.addAttribute("properties", properties);
+	        
+	        return "dashboard/addaddproperty";
+	    }
+	    
+	    
+	   
 }

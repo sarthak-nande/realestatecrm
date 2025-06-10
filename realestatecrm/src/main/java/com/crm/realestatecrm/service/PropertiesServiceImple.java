@@ -24,8 +24,8 @@ public class PropertiesServiceImple implements PropertiesService{
 	}
 
 	@Override
-	public List<Properties> findAllProperties() {
-		return propertiesDAO.findAllProperties();
+	public List<Properties> findAllProperties(String managerId) {
+		return propertiesDAO.findAllProperties(managerId);
 	}
 
 	@Override
