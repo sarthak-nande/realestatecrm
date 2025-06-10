@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Optionally include your custom CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- Added Animation Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <style>
+        /* Original styles */
+        body {
+            background: linear-gradient(135deg, #f6f9fc, #e9eff5);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        h1, h2 {
+            color: #34495e;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+        .table thead th {
+            background-color: #343a40;
+            color: #ecf0f1;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-group .form-control {
+            border-right: 0;
+        }
+        .input-group .btn-primary {
+            border-left: 0;
+        }
+        /* Extra interactive button animations */
+        .btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Card-like container for tables */
+        .table-wrapper {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        /* Ensure table rows are visible even if AOS is delaying opacity change */
+        .table tbody tr {
+            opacity: 1 !important;
+        }
+        /* Optional: Explicit text color for table cells */
+        .table tbody td {
+            color: #333;
+        }
+    </style>
+</head>
+<body class="container my-4 animate__animated animate__fadeIn">
+    <h1 class="text-center">Admin Dashboard</h1>
+
+    <!-- Search Form with fade-in effect -->
+    <form method="get" action="/dashboard/searchManagers" class="mb-4 animate__animated animate__fadeInDown">
+        <div class="input-group">
+            <input type="text" name="email" placeholder="Search by email" 
+                   th:value="${searchEmail}" class="form-control">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <!-- Managers Table wrapped in a card-like container with fade-in effect -->
+    <div class="table-wrapper animate__animated animate__fadeInUp">
+        <h2>Managers</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="manager : ${managers}">
+                    <td th:text="${manager.email}"></td>
+                    <td th:inline="text">[[${manager.firstName}]] [[${manager.lastName}]]</td>
+                    <td th:text="${manager.mobileNumber}"></td>
+                    <td>
+                        <!-- Toggle Status Button for Managers -->
+                        <form th:action="@{/updateStatus}" method="post">
+                            <input type="hidden" name="email" th:value="${manager.email}">
+                            <input type="hidden" name="searchEmail" th:value="${searchEmail}">
+                            <input type="hidden" name="enabled"
+                                   th:value="${@adminService.getUserStatus(manager.email) == 1 ? 0 : 1}">
+                            <button type="submit" class="btn btn-sm" 
+                                    th:classappend="${@adminService.getUserStatus(manager.email) == 1 ? ' btn-success' : ' btn-danger'}"
+                                    th:text="${@adminService.getUserStatus(manager.email) == 1 ? 'Active' : 'Deactive'}">
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Sales Executives Table -->
+    <div class="table-wrapper animate__animated animate__fadeInUp">
+        <h2>Sales Executives</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Assigned Manager</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="executive : ${salesExecutives}">
+                    <td th:text="${executive.email}"></td>
+                    <td th:inline="text">[[${executive.firstName}]] [[${executive.lastName}]]</td>
+                    <td th:text="${executive.mobileNumber}"></td>
+                    <td th:text="${executive.managerEmail}"></td>
+                    <td>
+                        <form th:action="@{/updateStatus}" method="post">
+                            <input type="hidden" name="email" th:value="${executive.email}">
+                            <input type="hidden" name="searchEmail" th:value="${searchEmail}">
+                            <input type="hidden" name="enabled"
+                                   th:value="${@adminService.getUserStatus(executive.email) == 1 ? 0 : 1}">
+                            <button type="submit" class="btn btn-sm" 
+                                    th:classappend="${@adminService.getUserStatus(executive.email) == 1 ? ' btn-success' : ' btn-danger'}"
+                                    th:text="${@adminService.getUserStatus(executive.email) == 1 ? 'Active' : 'Deactive'}">
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+      // Initialize AOS animations
+      AOS.init({
+          duration: 800,
+          easing: 'ease-in-out',
+          once: true
+      });
+    </script>
+    <!--
+      Optionally, you can remove or comment out the following auto-assignment
+      script if you find that it conflicts with your intended design.
+    -->
+    <!--
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const tableRows = document.querySelectorAll('tbody tr');
+          tableRows.forEach(row => {
+              row.setAttribute('data-aos', 'fade-up');
+              row.setAttribute('data-aos-duration', '800');
+          });
+      });
+    </script>
+    -->
+</body>
+</html>

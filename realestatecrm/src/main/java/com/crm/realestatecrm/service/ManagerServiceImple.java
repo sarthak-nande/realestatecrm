@@ -9,15 +9,15 @@ import com.crm.realestatecrm.entity.Manager;
 @Service
 public class ManagerServiceImple implements ManagerService {
 	
-	private MangerDAO mangerDAO;
+	private MangerDAO managerDAO;
 	
-	public ManagerServiceImple(MangerDAO mangerDAO) {
-		this.mangerDAO = mangerDAO;
+	public ManagerServiceImple(MangerDAO managerDAO) {
+		this.managerDAO = managerDAO;
 	}
 
 	@Override
 	public void save(Manager manager) {
-		mangerDAO.save(manager);
+		managerDAO.save(manager);
 		
 	}
 
