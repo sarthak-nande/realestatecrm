@@ -268,7 +268,14 @@ h2 {
 			<div class="col-md-10 main-content">
 				<div class="form-container-card">
 					<h2 class="text-center text-primary">Create Customer Support Ticket</h2>
-
+						<div th:if="${successMessage}" class="alert alert-success">
+						    <span th:text="${successMessage}"></span>
+						</div>
+						
+						<div th:if="${errorMessage}" class="alert alert-danger">
+						    <span th:text="${errorMessage}"></span>
+						</div>
+						
 					<form th:action="@{/dashboard/createTicket}"
 						th:object="${customerSupportTicket}" method="post" class="mt-4">
 

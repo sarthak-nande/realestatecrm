@@ -261,7 +261,14 @@ h2 {
 			<div class="col-md-10 main-content">
 				<div class="card shadow-lg">
 					<h2 class="text-center text-primary mb-4">Create Task</h2>
-
+					<div th:if="${successMessage}" class="alert alert-success">
+					    <span th:text="${successMessage}"></span>
+					</div>
+					
+					<div th:if="${errorMessage}" class="alert alert-danger">
+					    <span th:text="${errorMessage}"></span>
+					</div>
+					
 					<form th:action="@{/dashboard/createTask}" th:object="${task}"
 						method="post">
 
