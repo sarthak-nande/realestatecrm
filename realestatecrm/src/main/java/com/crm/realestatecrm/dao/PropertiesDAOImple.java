@@ -22,8 +22,15 @@ public class PropertiesDAOImple implements PropertiesDAO{
 	}
 
 	@Override
+	@Transactional
 	public void save(Properties properties) {
-		entityManager.persist(properties);
+		if (properties.getPropertyId() == null || properties.getPropertyId().isEmpty()) {
+	        
+	        entityManager.persist(properties);
+	    } else {
+	        
+	        entityManager.merge(properties);
+	    }
 	}
 
 	@Override

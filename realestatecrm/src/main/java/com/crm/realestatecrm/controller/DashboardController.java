@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.crm.realestatecrm.dao.SalesExecutiveDAO;
 import com.crm.realestatecrm.entity.Customer;
@@ -277,12 +278,17 @@ public class DashboardController {
 	    }
 
 	    @PostMapping("/dashboard/createTask")
-	    public String createTask(@ModelAttribute SalesExecutiveTask task) {
+	    public String createTask(@ModelAttribute SalesExecutiveTask task, RedirectAttributes redirectAttributes) {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		    String username = authentication.getName();
 		    task.setManagerId(username);
 		    System.out.println(task.getTaskType());
-	        salesExecutiveTaskService.save(task);
+		    try {
+		        salesExecutiveTaskService.save(task);
+		        redirectAttributes.addFlashAttribute("successMessage", "Task saved successfully!");
+		    } catch (Exception e) {
+		        redirectAttributes.addFlashAttribute("errorMessage", "Failed to save task. Please try again.");
+		    }
 	        return "redirect:/dashboard/createTask";
 	    }
 	    
@@ -296,7 +302,7 @@ public class DashboardController {
 	        
 	        List<SalesExecutiveTask> salesExecutiveTasks = salesExecutiveTaskService.getAllTask(email, role);
 	        
-	        System.out.println(salesExecutiveTasks);
+	        
 	        
 	        model.addAttribute("salesExecutiveTasks", salesExecutiveTasks);
 	        
@@ -335,7 +341,7 @@ public class DashboardController {
 	    }
 
 	    @PostMapping("/dashboard/createTicket")
-	    public String createTicket(@ModelAttribute CustomerSupportTickets ticket, @AuthenticationPrincipal UserDetails userDetails) {
+	    public String createTicket(@ModelAttribute CustomerSupportTickets ticket, @AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
 	    	String email = userDetails.getUsername();
 	        String role = userDetails.getAuthorities().stream()
 	                                  .map(GrantedAuthority::getAuthority)
@@ -348,10 +354,19 @@ public class DashboardController {
 	        	ticket.setManagerId(salesExecutive.getManagerEmail());
 	        }
 	        
-	        ticket.setManagerId(email);
+	        if(role.equals("ROLE_MANAGER")) {
+	        	ticket.setManagerId(email);
+	        }
+	        
 	        ticket.setStatus("Open");
 	        
-	        customerSupportTicketService.saveTicket(ticket);
+	        try {
+	        	customerSupportTicketService.saveTicket(ticket);
+		        redirectAttributes.addFlashAttribute("successMessage", "Task saved successfully!");
+		    } catch (Exception e) {
+		        redirectAttributes.addFlashAttribute("errorMessage", "Failed to save task. Please try again.");
+		    }
+	        
 	        return "redirect:/dashboard/createTicket";
 	    }
 	    
@@ -536,14 +551,15 @@ public class DashboardController {
 	        	properties = propertiesService.findAllProperties(managerEmail);
 	        }
 	        
-	        model.addAttribute("leaderBoard", properties);
+	        model.addAttribute("properties", properties);
 	    	
 	    	return "dashboard/properties";
 	    }
 	    
 	    @GetMapping("/dashboard/addproperty")
 	    public String addProperties(Model model) {
-	        model.addAttribute("properties", new Properties());
+	    	Properties properties = new Properties();
+	        model.addAttribute("properties", properties);
 	        
 	        return "dashboard/addaddproperty";
 	    }
@@ -557,8 +573,9 @@ public class DashboardController {
 	                                  .orElse(null);
 	        
 	        properties.setManagerId(email);
+	        propertiesService.save(properties);
 	        
-	        return "dashboard/addaddproperty";
+	        return "redirect:/dashboard/properties";
 	    }
 	    
 	    @GetMapping("/dashboard/properties/edit/{id}")
