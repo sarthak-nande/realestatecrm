@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Support Tickets</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Custom styles for the dashboard layout */
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+/* Offcanvas width for smaller screens */
+#offcanvasMenu {
+	--bs-offcanvas-width: 250px;
+}
+
+/* Sidebar for larger screens */
+.sidebar {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	background-color: #f8f9fa; /* Light grey background */
+	padding-top: 1rem;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navigation links styling */
+.nav-link {
+	transition: background-color 0.3s ease, color 0.3s ease;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	color: #343a40; /* Dark grey text */
+	padding: 0.75rem 1rem;
+}
+
+.nav-link:hover {
+	background-color: #e2e6ea; /* Lighter grey on hover */
+	color: #0056b3; /* Darker blue on hover */
+}
+
+.nav-link.active {
+	background-color: #007bff; /* Primary blue for active link */
+	color: white; /* White text for active link */
+}
+
+.nav-link i {
+	margin-right: 10px; /* Space between icon and text */
+	width: 20px; /* Fixed width for icons to align text */
+}
+
+/* Main content area */
+.main-content {
+	flex-grow: 1; /* Allows content to take up remaining space */
+	padding: 20px;
+	background-color: #e9ecef; /* Slightly darker background for content area */
+}
+
+/* Ticket Card specific styles */
+.ticket-card {
+	border-radius: 15px; /* More rounded corners */
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+	border: none; /* Remove default border */
+	transition: transform 0.2s ease-in-out;
+	height: 100%; /* Ensure cards in a row have same height */
+	display: flex;
+	flex-direction: column;
+}
+
+.ticket-card:hover {
+	transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.ticket-card .card-body {
+	padding: 1.5rem;
+	flex-grow: 1; /* Allow body to expand */
+}
+
+.ticket-card .card-title {
+	font-size: 1.3rem;
+	color: #007bff; /* Primary blue for ticket ID */
+	margin-bottom: 1rem;
+}
+
+.ticket-card .card-text {
+	font-size: 0.95rem;
+	color: #555;
+	margin-bottom: 0.5rem;
+}
+
+.ticket-card .card-text strong {
+	color: #333;
+}
+
+.ticket-card .card-text i {
+	width: 20px; /* Align icons */
+	text-align: center;
+	margin-right: 8px;
+	color: #007bff; /* Primary blue for info icons */
+}
+
+.ticket-card .badge {
+	font-size: 0.85em;
+	padding: 0.5em 0.8em;
+	border-radius: 0.5em;
+}
+
+/* Button group within cards */
+.ticket-actions .btn {
+	margin-right: 0.5rem;
+	margin-bottom: 0.5rem; /* For stacked buttons on smaller screens */
+	border-radius: 8px;
+	padding: 0.6rem 1.2rem;
+	font-size: 0.9rem;
+	transition: transform 0.2s ease;
+}
+
+.ticket-actions .btn:hover {
+	transform: translateY(-1px);
+}
+
+/* Status specific badges */
+.badge.bg-info {
+	background-color: #0dcaf0 !important;
+	color: #000;
+}
+
+.badge.bg-success {
+	background-color: #198754 !important;
+}
+
+.badge.bg-warning {
+	background-color: #ffc107 !important;
+	color: #000;
+}
+
+.badge.bg-danger {
+	background-color: #dc3545 !important;
+}
+
+.badge.bg-secondary {
+	background-color: #6c757d !important;
+}
+
+/* Pagination styles */
+.pagination .page-item .page-link {
+	border-radius: 8px; /* Rounded pagination buttons */
+	margin: 0 4px;
+	color: #007bff;
+}
+
+.pagination .page-item.active .page-link {
+	background-color: #007bff;
+	border-color: #007bff;
+	color: white;
+}
+
+/* Logout button styling */
+.btn-transparent {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	color: #212529 !important; /* Adjust color as needed */
+	padding-left: 0;
+	padding-right: 0;
+	text-align: left;
+}
+
+.btn-transparent:hover {
+	color: #dc3545 !important; /* Red on hover for logout */
+	background-color: transparent !important;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark shadow-sm">
+		<div class="container-fluid">
+			<button class="navbar-toggler d-md-none d-block" type="button"
+				data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="#">Dashboard</a>
+		</div>
+	</nav>
+
+	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu"
+		aria-labelledby="offcanvasMenuLabel">
+		<div class="offcanvas-header">
+			<h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+				aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<ul class="nav flex-column">
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 sidebar d-none d-md-block">
+				<ul class="nav flex-column mt-3">
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-md-10 main-content">
+				<div class="container mt-4">
+					<h2 class="text-primary mb-4">Customer Support Tickets</h2>
+
+					<div class="row" id="ticketCards">
+						</div>
+
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center mt-4">
+							<li class="page-item"><a class="page-link" href="#"
+								id="prevPage">Previous</a></li>
+							<li class="page-item"><span class="page-link" id="pageInfo">Page
+									1</span></li>
+							<li class="page-item"><a class="page-link" href="#"
+								id="nextPage">Next</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentPage = 1;
+        const pageSize = 6; // Number of cards per page
+        let tickets = [];
+
+        function getStatusBadgeClass(status) {
+            switch (status) {
+                case 'Open': return 'bg-danger';
+                case 'Pending': return 'bg-warning';
+                case 'Closed': return 'bg-success';
+                case 'In Progress': return 'bg-info';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function loadTickets() {
+            // Extract ticket data from Thymeleaf
+            tickets = Array.from(document.querySelectorAll(".ticket-data")).map(el => ({
+                ticketId: el.getAttribute("data-ticketId"),
+                customerId: el.getAttribute("data-customerId"),
+                issueCategory: el.getAttribute("data-issueCategory"),
+                description: el.getAttribute("data-description"),
+                status: el.getAttribute("data-status"),
+                salesExecutive: el.getAttribute("data-salesExecutive") // Assuming you might add sales executive later
+            }));
+            displayTickets();
+        }
+
+        function displayTickets() {
+            const ticketContainer = document.getElementById("ticketCards");
+            ticketContainer.innerHTML = ""; // Clear existing cards
+
+            let start = (currentPage - 1) * pageSize;
+            let end = Math.min(start + pageSize, tickets.length);
+            let paginatedTickets = tickets.slice(start, end);
+
+            if (paginatedTickets.length === 0 && tickets.length > 0 && currentPage > 1) {
+                currentPage--;
+                displayTickets(); // Go back one page if current page is empty after filtering/deletion
+                return;
+            }
+
+            paginatedTickets.forEach(ticket => {
+                const statusBadgeClass = getStatusBadgeClass(ticket.status);
+                ticketContainer.innerHTML += `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card ticket-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Ticket ID: ${ticket.ticketId}</h5>
+                            <hr>
+                            <p class="card-text"><i class="fas fa-user"></i> <strong>Customer:</strong> ${ticket.customerId}</p>
+                            <p class="card-text"><i class="fas fa-tag"></i> <strong>Category:</strong> ${ticket.issueCategory}</p>
+                            <p class="card-text">
+                                <i class="fas fa-info-circle"></i> <strong>Description:</strong> 
+                                ${ticket.description.length > 100 ? ticket.description.substring(0, 100) + '...' : ticket.description}
+                            </p>
+                            <p class="card-text"><i class="fas fa-clipboard-check"></i> <strong>Status:</strong>
+                                <span class="badge ${statusBadgeClass}">${ticket.status}</span>
+                            </p>
+                            <div class="d-flex flex-wrap justify-content-start mt-3 ticket-actions">
+                                <a href="/dashboard/ticket/edit?ticket=${ticket.ticketId}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="/dashboard/customerfeedback?ticketId=${ticket.ticketId}&customerId=${ticket.customerId}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-comment-dots"></i> Add Feedback
+                                </a>
+                                <a href="/dashboard/feedbacks?ticketId=${ticket.ticketId}&customerId=${ticket.customerId}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-eye"></i> Show Feedbacks
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+
+            document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${Math.max(1, Math.ceil(tickets.length / pageSize))}`;
+        }
+
+        document.getElementById("prevPage").addEventListener("click", function (e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                displayTickets();
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", function (e) {
+            e.preventDefault();
+            if ((currentPage * pageSize) < tickets.length) {
+                currentPage++;
+                displayTickets();
+            }
+        });
+
+        // Initial load of tickets
+        loadTickets();
+
+        // Handle page reload on back/forward navigation
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+
+        // Ensure the sidebar remains visible on page load for larger screens
+        window.addEventListener('load', function() {
+            if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
+                document.getElementById('offcanvasMenu').classList.remove('show');
+            }
+        });
+    });
+    </script>
+
+	<div th:each="ticket : ${customerSupportTickets}" class="ticket-data"
+		th:data-ticketId="${ticket.ticketId}"
+		th:data-customerId="${ticket.customerId}"
+		th:data-issueCategory="${ticket.issueCategory}"
+		th:data-description="${ticket.discription}"
+		th:data-status="${ticket.status}"></div>
+
+</body>
+</html>

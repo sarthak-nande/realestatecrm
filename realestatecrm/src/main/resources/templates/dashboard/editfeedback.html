@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Sales Executive</title>
+<title>Edit Customer Feedback</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -68,16 +68,15 @@ body {
 	min-height: calc(100vh - 56px); /* Adjust based on navbar height */
 }
 
-/* Card specific styles for the form */
-.card {
+/* Card/Form Container specific styles */
+.form-container-card {
 	border-radius: 15px; /* More rounded corners */
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
 	border: none; /* Remove default border */
-	max-width: 900px; /* Increased width as per your original code */
+	max-width: 600px; /* Limit width for better form readability */
 	width: 100%; /* Ensure it takes full width within its container */
 	padding: 2.5rem; /* Increase padding inside the card */
-	margin: auto; /* Center the card horizontally (though flexbox does this already) */
-	background: rgba(255, 255, 255, 0.9); /* From your original code */
+	background: #fff; /* Ensure card background is white */
 }
 
 .form-label {
@@ -87,7 +86,7 @@ body {
 }
 
 .form-control, .form-select {
-	border-radius: 8px; /* Rounded input fields */
+	border-radius: 8px; /* Rounded input fields and selects */
 	padding: 0.75rem 1rem; /* More padding inside inputs */
 	border: 1px solid #ced4da;
 	transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -98,19 +97,21 @@ body {
 	box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Light blue shadow on focus */
 }
 
-.btn-primary {
-	background-color: #007bff; /* Standard primary blue */
+/* Update Button Style */
+.btn-update-feedback {
+	background-color: #007bff; /* Primary blue for updates */
 	border-color: #007bff;
 	padding: 0.75rem 1.5rem; /* Larger button padding */
 	font-size: 1.1rem; /* Slightly larger font size */
 	border-radius: 8px; /* Rounded button */
 	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
 		transform 0.2s ease-in-out;
+	width: 100%; /* Full width */
 }
 
-.btn-primary:hover {
+.btn-update-feedback:hover {
 	background-color: #0056b3; /* Darker blue on hover */
-	border-color: #0056b3;
+	border-color: #004a99;
 	transform: translateY(-2px); /* Slight lift on hover */
 }
 
@@ -118,13 +119,6 @@ h2 {
 	color: #007bff; /* Primary blue for the heading */
 	margin-bottom: 1.5rem;
 	font-weight: 700; /* Bold heading */
-}
-
-/* Alert messages */
-.alert {
-	border-radius: 8px;
-	padding: 1rem 1.25rem;
-	margin-bottom: 1.5rem;
 }
 
 /* Logout button styling */
@@ -173,7 +167,7 @@ h2 {
 							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
 							
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
 							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
 					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
@@ -198,7 +192,7 @@ h2 {
 						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
 						
 					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
@@ -226,7 +220,7 @@ h2 {
 							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
 							
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
 							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
 					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
@@ -251,7 +245,7 @@ h2 {
 						class="nav-link" th:href="@{/dashboard/dailytask}"><i
 							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
 						
 					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
@@ -267,71 +261,49 @@ h2 {
 			</div>
 
 			<div class="col-md-10 main-content">
-				<div class="card shadow-lg">
-					<div th:if="${success}" class="alert alert-success" role="alert">
-						<span th:text="${success}"></span>
-					</div>
-					<div th:if="${error}" class="alert alert-danger" role="alert">
-						<span th:text="${error}"></span>
-					</div>
-					<h2 class="text-center text-primary mb-4">Add Sales Executive</h2>
+				<div class="form-container-card">
+					<h2 class="text-center text-primary mb-4">
+						<i class="fas fa-edit"></i> Edit Customer Feedback
+					</h2>
 
-					<form th:action="@{/dashboard/addSalesExec}"
-						th:object="${salesExecutive}" method="post"
-						onsubmit="return validatePasswords()">
-						<div class="row">
-							<div class="col-md-6 col-12 mb-3">
-								<label for="firstName" class="form-label">First Name</label> <input
-									type="text" th:field="*{firstName}" class="form-control"
-									id="firstName" required>
-							</div>
+					<form th:action="@{/dashboard/feedback/edit}"
+						th:object="${customerFeedback}" method="post">
 
-							<div class="col-md-6 col-12 mb-3">
-								<label for="lastName" class="form-label">Last Name</label> <input
-									type="text" th:field="*{lastName}" class="form-control"
-									id="lastName" required>
-							</div>
+						<input type="hidden" th:field="*{feedbackId}"> <input
+							type="hidden" th:field="*{ticketId}"> <input
+							type="hidden" th:field="*{customerId}">
+
+						<div class="mb-3">
+							<label class="form-label"><i
+								class="fas fa-check-circle"></i> Resolution Status</label> <select
+								class="form-select" th:field="*{resolutionStatus}">
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select>
 						</div>
 
-						<div class="row">
-							<div class="col-md-6 col-12 mb-3">
-								<label for="email" class="form-label">Email</label> <input
-									type="email" th:field="*{email}" class="form-control"
-									id="email" required>
-							</div>
-
-							<div class="col-md-6 col-12 mb-3">
-								<label for="mobileNumber" class="form-label">Mobile
-									Number</label> <input type="number" th:field="*{mobileNumber}"
-									class="form-control" id="mobileNumber" required>
-							</div>
+						<div class="mb-3">
+							<label class="form-label"><i class="fas fa-star"></i>
+								Rating (1-5)</label> <select class="form-select"
+								th:field="*{rating}">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+							</select>
 						</div>
 
-						<div class="row">
-							<div class="col-md-6 col-12 mb-3">
-								<label for="password" class="form-label">Password</label>
-								<div class="input-group">
-									<input type="password" th:field="*{password}"
-										class="form-control" id="password" required>
-									<button type="button" class="btn btn-outline-secondary"
-										onclick="togglePassword('password')">
-										<i class="fa-solid fa-eye"></i>
-									</button>
-								</div>
-							</div>
-
-							<div class="col-md-6 col-12 mb-3">
-								<label for="confirmPassword" class="form-label">Retype
-									Password</label> <input type="password" class="form-control"
-									id="confirmPassword" required>
-								<div class="text-danger mt-1" id="error-message"></div>
-							</div>
+						<div class="mb-4">
+							<label class="form-label"><i class="fas fa-comments"></i>
+								Comments</label>
+							<textarea class="form-control" th:field="*{comments}" rows="5"
+								required></textarea>
 						</div>
 
-						<div class="text-center mt-3">
-							<button type="submit" class="btn btn-primary w-100">Create
-								Sales Executive</button>
-						</div>
+						<button type="submit" class="btn btn-primary btn-update-feedback">
+							<i class="fas fa-save"></i> Update Feedback
+						</button>
 					</form>
 				</div>
 			</div>
@@ -341,34 +313,16 @@ h2 {
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
-		function togglePassword(fieldId) {
-			var field = document.getElementById(fieldId);
-			field.type = field.type === "password" ? "text" : "password";
-		}
-
-		function validatePasswords() {
-			var password = document.getElementById("password").value;
-			var confirmPassword = document.getElementById("confirmPassword").value;
-			var errorMessage = document.getElementById("error-message");
-
-			if (password !== confirmPassword) {
-				errorMessage.textContent = "Passwords do not match!";
-				return false;
-			}
-			errorMessage.textContent = ""; // Clear error message if passwords match
-			return true;
-		}
-
-		window.addEventListener('pageshow', function(event) {
-			if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-				window.location.reload();
-			}
-		});
-
 		// Ensure the sidebar remains visible on page load for larger screens
 		window.addEventListener('load', function() {
 			if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
 				document.getElementById('offcanvasMenu').classList.remove('show');
+			}
+		});
+
+		window.addEventListener('pageshow', function(event) {
+			if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+				window.location.reload();
 			}
 		});
 	</script>

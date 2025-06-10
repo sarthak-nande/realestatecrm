@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Sales Executive</title>
+<title>Customer Dashboard</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -62,69 +62,63 @@ body {
 	flex-grow: 1; /* Allows content to take up remaining space */
 	padding: 20px;
 	background-color: #e9ecef; /* Slightly darker background for content area */
-	display: flex; /* Use flexbox to center content vertically */
-	justify-content: center; /* Center content horizontally */
-	align-items: center; /* Center content vertically */
-	min-height: calc(100vh - 56px); /* Adjust based on navbar height */
 }
 
-/* Card specific styles for the form */
-.card {
+/* Card specific styles for customer cards */
+.customer-card {
 	border-radius: 15px; /* More rounded corners */
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
 	border: none; /* Remove default border */
-	max-width: 900px; /* Increased width as per your original code */
-	width: 100%; /* Ensure it takes full width within its container */
-	padding: 2.5rem; /* Increase padding inside the card */
-	margin: auto; /* Center the card horizontally (though flexbox does this already) */
-	background: rgba(255, 255, 255, 0.9); /* From your original code */
+	transition: transform 0.2s ease-in-out;
 }
 
-.form-label {
-	font-weight: 600; /* Slightly bolder labels */
-	color: #495057; /* Darker grey for labels */
+.customer-card:hover {
+	transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.customer-card .card-body {
+	padding: 1.5rem;
+}
+
+.customer-card .card-title {
+	font-size: 1.5rem;
+	color: #007bff; /* Primary blue for names */
+}
+
+.customer-card .card-text {
+	font-size: 0.95rem;
+	color: #555;
 	margin-bottom: 0.5rem;
 }
 
-.form-control, .form-select {
-	border-radius: 8px; /* Rounded input fields */
-	padding: 0.75rem 1rem; /* More padding inside inputs */
-	border: 1px solid #ced4da;
-	transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+.customer-card .card-text strong {
+	color: #333;
 }
 
-.form-control:focus, .form-select:focus {
-	border-color: #80bdff; /* Bootstrap primary focus color */
-	box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Light blue shadow on focus */
+.customer-card .card-text i {
+	width: 20px; /* Align icons */
+	text-align: center;
+	margin-right: 8px;
+	color: #007bff; /* Primary blue for info icons */
 }
 
-.btn-primary {
-	background-color: #007bff; /* Standard primary blue */
+.customer-card .badge {
+	font-size: 0.85em;
+	padding: 0.5em 0.8em;
+	border-radius: 0.5em;
+}
+
+/* Pagination styles */
+.pagination .page-item .page-link {
+	border-radius: 8px; /* Rounded pagination buttons */
+	margin: 0 4px;
+	color: #007bff;
+}
+
+.pagination .page-item.active .page-link {
+	background-color: #007bff;
 	border-color: #007bff;
-	padding: 0.75rem 1.5rem; /* Larger button padding */
-	font-size: 1.1rem; /* Slightly larger font size */
-	border-radius: 8px; /* Rounded button */
-	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
-		transform 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-	background-color: #0056b3; /* Darker blue on hover */
-	border-color: #0056b3;
-	transform: translateY(-2px); /* Slight lift on hover */
-}
-
-h2 {
-	color: #007bff; /* Primary blue for the heading */
-	margin-bottom: 1.5rem;
-	font-weight: 700; /* Bold heading */
-}
-
-/* Alert messages */
-.alert {
-	border-radius: 8px;
-	padding: 1rem 1.25rem;
-	margin-bottom: 1.5rem;
+	color: white;
 }
 
 /* Logout button styling */
@@ -173,14 +167,14 @@ h2 {
 							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
 							
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
 							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
 					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/salesexecutivedetails}"><i
 							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/customerDetails}"><i
 							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
 					
@@ -226,14 +220,14 @@ h2 {
 							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
 							
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
-						class="nav-link active" th:href="@{/dashboard/addSalesExec}"><i
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
 							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
 					
 					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
 						th:href="@{/dashboard/salesexecutivedetails}"><i
 							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
 					
-					<li class="nav-item"><a class="nav-link"
+					<li class="nav-item"><a class="nav-link active"
 						th:href="@{/dashboard/customerDetails}"><i
 							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
 					
@@ -267,72 +261,22 @@ h2 {
 			</div>
 
 			<div class="col-md-10 main-content">
-				<div class="card shadow-lg">
-					<div th:if="${success}" class="alert alert-success" role="alert">
-						<span th:text="${success}"></span>
-					</div>
-					<div th:if="${error}" class="alert alert-danger" role="alert">
-						<span th:text="${error}"></span>
-					</div>
-					<h2 class="text-center text-primary mb-4">Add Sales Executive</h2>
+				<div class="container mt-4">
+					<h2 class="text-primary mb-4">Customer Dashboard</h2>
 
-					<form th:action="@{/dashboard/addSalesExec}"
-						th:object="${salesExecutive}" method="post"
-						onsubmit="return validatePasswords()">
-						<div class="row">
-							<div class="col-md-6 col-12 mb-3">
-								<label for="firstName" class="form-label">First Name</label> <input
-									type="text" th:field="*{firstName}" class="form-control"
-									id="firstName" required>
-							</div>
-
-							<div class="col-md-6 col-12 mb-3">
-								<label for="lastName" class="form-label">Last Name</label> <input
-									type="text" th:field="*{lastName}" class="form-control"
-									id="lastName" required>
-							</div>
+					<div class="row" id="customerCards">
 						</div>
 
-						<div class="row">
-							<div class="col-md-6 col-12 mb-3">
-								<label for="email" class="form-label">Email</label> <input
-									type="email" th:field="*{email}" class="form-control"
-									id="email" required>
-							</div>
-
-							<div class="col-md-6 col-12 mb-3">
-								<label for="mobileNumber" class="form-label">Mobile
-									Number</label> <input type="number" th:field="*{mobileNumber}"
-									class="form-control" id="mobileNumber" required>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-md-6 col-12 mb-3">
-								<label for="password" class="form-label">Password</label>
-								<div class="input-group">
-									<input type="password" th:field="*{password}"
-										class="form-control" id="password" required>
-									<button type="button" class="btn btn-outline-secondary"
-										onclick="togglePassword('password')">
-										<i class="fa-solid fa-eye"></i>
-									</button>
-								</div>
-							</div>
-
-							<div class="col-md-6 col-12 mb-3">
-								<label for="confirmPassword" class="form-label">Retype
-									Password</label> <input type="password" class="form-control"
-									id="confirmPassword" required>
-								<div class="text-danger mt-1" id="error-message"></div>
-							</div>
-						</div>
-
-						<div class="text-center mt-3">
-							<button type="submit" class="btn btn-primary w-100">Create
-								Sales Executive</button>
-						</div>
-					</form>
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center mt-4">
+							<li class="page-item"><a class="page-link" href="#"
+								id="prevPage">Previous</a></li>
+							<li class="page-item"><span class="page-link" id="pageInfo">Page
+									1</span></li>
+							<li class="page-item"><a class="page-link" href="#"
+								id="nextPage">Next</a></li>
+						</ul>
+					</nav>
 				</div>
 			</div>
 		</div>
@@ -340,37 +284,113 @@ h2 {
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 	<script>
-		function togglePassword(fieldId) {
-			var field = document.getElementById(fieldId);
-			field.type = field.type === "password" ? "text" : "password";
-		}
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentPage = 1;
+        const pageSize = 6; // Number of cards per page
+        let customers = [];
 
-		function validatePasswords() {
-			var password = document.getElementById("password").value;
-			var confirmPassword = document.getElementById("confirmPassword").value;
-			var errorMessage = document.getElementById("error-message");
+        function loadCustomers() {
+            // Extract customer data from Thymeleaf
+            customers = Array.from(document.querySelectorAll(".customer-data")).map(el => ({
+                firstName: el.getAttribute("data-firstname"),
+                lastName: el.getAttribute("data-lastname"),
+                email: el.getAttribute("data-email"),
+                mobile: el.getAttribute("data-mobile"),
+                salesExec: el.getAttribute("data-salesExec"),
+                manager: el.getAttribute("data-manager"),
+                source: el.getAttribute("data-source"),
+                status: el.getAttribute("data-status")
+            }));
 
-			if (password !== confirmPassword) {
-				errorMessage.textContent = "Passwords do not match!";
-				return false;
-			}
-			errorMessage.textContent = ""; // Clear error message if passwords match
-			return true;
-		}
+            displayCustomers();
+        }
 
-		window.addEventListener('pageshow', function(event) {
-			if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-				window.location.reload();
-			}
-		});
+        function displayCustomers() {
+            const customerContainer = document.getElementById("customerCards");
+            customerContainer.innerHTML = ""; // Clear existing cards
 
-		// Ensure the sidebar remains visible on page load for larger screens
-		window.addEventListener('load', function() {
-			if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
-				document.getElementById('offcanvasMenu').classList.remove('show');
-			}
-		});
-	</script>
+            let start = (currentPage - 1) * pageSize;
+            let end = Math.min(start + pageSize, customers.length);
+            let paginatedCustomers = customers.slice(start, end);
+
+            paginatedCustomers.forEach(customer => {
+                customerContainer.innerHTML += `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card customer-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-user-circle fa-3x text-primary me-3"></i>
+                                <h5 class="card-title">${customer.firstName} ${customer.lastName}</h5>
+                            </div>
+                            <hr>
+                            <p class="card-text"><i class="fas fa-envelope"></i> <strong>Email:</strong> ${customer.email}</p>
+                            <p class="card-text"><i class="fas fa-phone"></i> <strong>Mobile:</strong> ${customer.mobile}</p>
+                            <p class="card-text"><i class="fas fa-user-tie"></i> <strong>Sales Executive:</strong> ${customer.salesExec || 'N/A'}</p>
+                            <p class="card-text"><i class="fas fa-user-shield"></i> <strong>Manager:</strong> ${customer.manager || 'N/A'}</p>
+                            <p class="card-text"><i class="fas fa-share-alt"></i> <strong>Source:</strong> ${customer.source || 'N/A'}</p>
+                            <p class="card-text"><i class="fas fa-clipboard-check"></i> <strong>Status:</strong>
+                                <span class="badge bg-success">${customer.status || 'N/A'}</span>
+                            </p>
+                            <div class="d-grid mt-3">
+                                <a href="/dashboard/customerDetails/edit?email=${customer.email}" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Update Customer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    `;
+            });
+
+            document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${Math.ceil(customers.length / pageSize)}`;
+        }
+
+        document.getElementById("prevPage").addEventListener("click", function (e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                displayCustomers();
+            }
+        });
+
+        document.getElementById("nextPage").addEventListener("click", function (e) {
+            e.preventDefault();
+            if ((currentPage * pageSize) < customers.length) {
+                currentPage++;
+                displayCustomers();
+            }
+        });
+
+        // Initial load of customers
+        loadCustomers();
+
+        // Handle page reload on back/forward navigation
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+
+        // Ensure the sidebar remains visible on page load for larger screens
+        window.addEventListener('load', function() {
+            if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
+                document.getElementById('offcanvasMenu').classList.remove('show');
+            }
+        });
+    });
+    </script>
+
+    <div th:each="customer : ${customers}" class="customer-data"
+        th:data-firstname="${customer.firstName}"
+        th:data-lastname="${customer.lastName}"
+        th:data-email="${customer.email}"
+        th:data-mobile="${customer.mobileNumber}"
+        th:data-salesExec="${customer.salesExecId}"
+        th:data-manager="${customer.managerId}"
+        th:data-source="${customer.source}"
+        th:data-status="${customer.status}">
+    </div>
 </body>
 </html>
