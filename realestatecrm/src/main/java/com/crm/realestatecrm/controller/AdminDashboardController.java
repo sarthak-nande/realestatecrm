@@ -19,11 +19,11 @@ public class AdminDashboardController {
 
     @GetMapping("/dashboard/searchManagers")
     public String searchManagers(@RequestParam("email") String email, Model model) {
-         // Search for managers by email (partial, case-insensitive)
+         
          List<Manager> managers = adminService.searchManagersByEmail(email);
          List<SalesExecutive> salesExecutives = new ArrayList<>();
          
-         // For each found manager, get the associated sales executives
+         
          for (Manager manager : managers) {
              List<SalesExecutive> execs = adminService.searchSalesExecutivesByManagerEmail(manager.getEmail());
              salesExecutives.addAll(execs);
@@ -31,6 +31,6 @@ public class AdminDashboardController {
          model.addAttribute("managers", managers);
          model.addAttribute("salesExecutives", salesExecutives);
          model.addAttribute("searchEmail", email);
-         return "admin/admin";  // This points to your admin.html in the templates/admin folder.
+         return "admin/admin";
     }
 }
