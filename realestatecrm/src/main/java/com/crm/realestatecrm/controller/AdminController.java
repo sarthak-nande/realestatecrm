@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.crm.realestatecrm.entity.Manager;
 import com.crm.realestatecrm.entity.SalesExecutive;
 import com.crm.realestatecrm.service.AdminService;
@@ -49,12 +51,38 @@ public class AdminController {
     @PostMapping("/updateStatus")
     public String updateUserStatus(@RequestParam("email") String email,
                                    @RequestParam("enabled") int enabled,
-                                   @RequestParam(value = "searchEmail", required = false) String searchEmail) {
-        adminService.updateUserStatus(email, enabled);
-        // If a searchEmail is provided, redirect back to the search so that the sales executives remain visible
+                                   @RequestParam(value = "searchEmail", required = false) String searchEmail, RedirectAttributes redirectAttributes) {
+        
+        try {
+        	adminService.updateUserStatus(email, enabled);
+			redirectAttributes.addFlashAttribute("successMessage", "Account Status updated successfully!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Failed to update account status.");
+		}
+        
         if (searchEmail != null && !searchEmail.trim().isEmpty()){
             return "redirect:/admin?email=" + searchEmail;
         }
+        
         return "redirect:/admin";
+    }
+    
+    @PostMapping("/updateSalesStatus")
+    public String updateSalesStatus(@RequestParam("email") String email,
+                                   @RequestParam("enabled") int enabled,
+                                   @RequestParam(value = "searchEmail", required = false) String searchEmail, RedirectAttributes redirectAttributes) {
+       
+        try {
+        	 adminService.updateUserStatus(email, enabled);
+			redirectAttributes.addFlashAttribute("successMessage", "Account Status updated successfully!");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Failed to update account status!");
+		}
+        
+        if (searchEmail != null && !searchEmail.trim().isEmpty()){
+            return "redirect:/dashboard/salesexecutivedetails";
+        }
+        
+        return "redirect:/dashboard/salesexecutivedetails";
     }
 }

@@ -403,8 +403,14 @@ public class DashboardController {
 	    }
 	    
 	    @PostMapping("/dashboard/ticket/edit")
-	    public String updateTicket(@ModelAttribute CustomerSupportTickets customerSupportTickets) {
-	    	customerSupportTicketService.updateTicket(customerSupportTickets);
+	    public String updateTicket(@ModelAttribute CustomerSupportTickets customerSupportTickets, RedirectAttributes redirectAttributes) {
+	    	 try {
+	    		 customerSupportTicketService.updateTicket(customerSupportTickets);
+	    	        redirectAttributes.addFlashAttribute("successMessage", "Ticket updated successfully!");
+	    	    } catch (Exception e) {
+	    	        redirectAttributes.addFlashAttribute("errorMessage", "Failed to update ticket.");
+	    	    }
+	    	
 			return "redirect:/dashboard/tickets";
 	    }
 	    
@@ -463,11 +469,17 @@ public class DashboardController {
 	    }
 	    
 	    @PostMapping("dashboard/feedback/edit")
-	    public String updateFeedback(@ModelAttribute CustomerFeedback customerFeedback) {
-	    	customerFeedbackService.updateCustomerFeedback(customerFeedback);
-	    	System.out.println(customerFeedback.getTicketId());
+	    public String updateFeedback(@ModelAttribute CustomerFeedback customerFeedback, RedirectAttributes redirectAttributes) {
+	    	
+			try {
+				customerFeedbackService.updateCustomerFeedback(customerFeedback);
+				redirectAttributes.addFlashAttribute("successMessage", "Feedback updated successfully!");
+			} catch (Exception e) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Failed to update feedback.");
+			}
+	    	
 	    	if(customerFeedback.getTicketId() != null) {
-	    		return "redirect:/dashboard/tickets";
+	    		return "redirect:/dashboard/feedbacks?ticketId="+customerFeedback.getTicketId()+"&customerId="+customerFeedback.getCustomerId();
 	    	}
 	    	return "redirect:/dashboard/customerDetails";
 	    }
