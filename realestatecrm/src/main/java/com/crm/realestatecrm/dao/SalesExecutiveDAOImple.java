@@ -1,7 +1,9 @@
 package com.crm.realestatecrm.dao;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -103,6 +105,7 @@ public class SalesExecutiveDAOImple implements SalesExecutiveDAO {
 	@Override
 	public List<LeaderBoard> getLeadboradList(String mail) {
 		List<LeaderBoard> leaderBoards = new ArrayList<>();
+		List<LeaderBoard> finalListOfLeaderBoard = new ArrayList<>();
 		TypedQuery<SalesExecutive> query = entityManager.createQuery("select s from SalesExecutive s where s.managerEmail = :managerEmail",SalesExecutive.class).setParameter("managerEmail", mail);
 		List<SalesExecutive> salesExecutives = query.getResultList();
 		
@@ -129,8 +132,14 @@ public class SalesExecutiveDAOImple implements SalesExecutiveDAO {
 			leaderBoard.setTaskCount(taskCount);
 			
 			leaderBoards.add(leaderBoard);
+			
 		}
-		return leaderBoards;
+		return leaderBoards.stream()
+			    .sorted(Comparator.comparingInt(LeaderBoard::getCustmerCount)
+			                      .thenComparingInt(LeaderBoard::getTaskCount)
+			                      .reversed())
+			    .collect(Collectors.toList());
+
 	}
 
 }

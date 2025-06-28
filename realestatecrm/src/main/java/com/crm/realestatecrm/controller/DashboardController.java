@@ -26,6 +26,7 @@ import com.crm.realestatecrm.entity.Customer;
 import com.crm.realestatecrm.entity.CustomerFeedback;
 import com.crm.realestatecrm.entity.CustomerSupportTickets;
 import com.crm.realestatecrm.entity.LeaderBoard;
+import com.crm.realestatecrm.entity.Logs;
 import com.crm.realestatecrm.entity.Manager;
 import com.crm.realestatecrm.entity.Properties;
 import com.crm.realestatecrm.entity.SalesExecutive;
@@ -33,6 +34,7 @@ import com.crm.realestatecrm.entity.SalesExecutiveTask;
 import com.crm.realestatecrm.service.CustomerFeedbackService;
 import com.crm.realestatecrm.service.CustomerService;
 import com.crm.realestatecrm.service.CustomerSupportTicketService;
+import com.crm.realestatecrm.service.LogsService;
 import com.crm.realestatecrm.service.PropertiesService;
 import com.crm.realestatecrm.service.SalesExecutiveService;
 import com.crm.realestatecrm.service.SalesExecutiveTaskService;
@@ -51,15 +53,17 @@ public class DashboardController {
 	private SalesExecutiveTaskService salesExecutiveTaskService;
 	private CustomerSupportTicketService customerSupportTicketService;
 	private CustomerFeedbackService customerFeedbackService;
+	private LogsService logsService;
 	
 	@Autowired
-	public DashboardController(SalesExecutiveService salesExecutiveService, CustomerService customerService, PropertiesService propertiesService, SalesExecutiveTaskService salesExecutiveTaskService, CustomerSupportTicketService customerSupportTicketService, CustomerFeedbackService customerFeedbackService) {
+	public DashboardController(SalesExecutiveService salesExecutiveService, CustomerService customerService, PropertiesService propertiesService, SalesExecutiveTaskService salesExecutiveTaskService, CustomerSupportTicketService customerSupportTicketService, CustomerFeedbackService customerFeedbackService, LogsService logsService) {
 		this.salesExecutiveService = salesExecutiveService;
 		this.customerService = customerService;
 		this.propertiesService = propertiesService;
 		this.salesExecutiveTaskService = salesExecutiveTaskService;
 		this.customerSupportTicketService = customerSupportTicketService;
 		this.customerFeedbackService = customerFeedbackService;
+		this.logsService = logsService;
 	}
 	
 	@GetMapping("/access-denied")
@@ -144,7 +148,7 @@ public class DashboardController {
 	public String showSalesExecutiveForm(@ModelAttribute SalesExecutive salesExecutive) {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String username = authentication.getName();
-
+	    
 	    return "dashboard/salesexec"; // Ensure this matches the actual HTML file name
 	}
 
@@ -153,14 +157,19 @@ public class DashboardController {
 	public String addSalesExecutive(@ModelAttribute SalesExecutive salesExecutive, Model model) {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String username = authentication.getName();
-	    
+	    Logs logs = new Logs();
 	    salesExecutive.setManagerEmail(username);
 	    
 	    if(salesExecutiveService.save(salesExecutive)) {
 	    	model.addAttribute("success", "User Successfully Saved!");
+	    	logs.setAction("POST");
+	    	logs.setDetials("Manager Added Sales Executive!");
+	    	logs.setEmail(username);
+	    	logsService.save(logs);
 	    }else {
 	    	model.addAttribute("error", "Failed To Save User!");
 	    }
+	    
 	    
 	    return "dashboard/salesexec"; // Use redirect to prevent duplicate form submission
 	}
@@ -194,11 +203,15 @@ public class DashboardController {
 	public String addCustomer(@ModelAttribute Customer customer, Model model) {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String username = authentication.getName();
-	    
+	    Logs logs = new Logs();
 	    customer.setSalesExecId(username);
 	    
 	    if(customerService.save(customer)) {
 	    	model.addAttribute("success", "User Successfully Saved!");
+	    	logs.setAction("POST");
+	    	logs.setDetials("Customer Added Successfully!");
+	    	logs.setEmail(username);
+	    	logsService.save(logs);
 	    }else {
 	    	model.addAttribute("error", "User Already Exist!");
 	    }
@@ -242,11 +255,6 @@ public class DashboardController {
 	        	properties = propertiesService.findAllProperties(managerEmail);
 	        }
 	        
-	        if(customer.getPropertyId().equals("null")) {
-	        	Properties property = propertiesService.findPropertyById(customer.getPropertyId());
-		        String currentProperty = property.getTitle();
-		        model.addAttribute("property" , currentProperty);
-	        }
 	        
 	        model.addAttribute("properties", properties);
 	        model.addAttribute("customer", customer);
@@ -255,7 +263,14 @@ public class DashboardController {
 
 	    @PostMapping("/dashboard/customerDetails/update")
 	    public String updateCustomer(@ModelAttribute Customer customer) {
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		    String username = authentication.getName();
+	    	Logs logs = new Logs();
 	        customerService.updateCustomer(customer);
+	        logs.setAction("POST");
+	    	logs.setDetials("Customer Details Updated Successfully!");
+	    	logs.setEmail(username);
+	    	logsService.save(logs);
 	        return "redirect:/dashboard/customerDetails";
 	    }
 	    
@@ -281,11 +296,16 @@ public class DashboardController {
 	    public String createTask(@ModelAttribute SalesExecutiveTask task, RedirectAttributes redirectAttributes) {
 	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		    String username = authentication.getName();
+		    Logs logs = new Logs();
 		    task.setManagerId(username);
 		    System.out.println(task.getTaskType());
 		    try {
 		        salesExecutiveTaskService.save(task);
 		        redirectAttributes.addFlashAttribute("successMessage", "Task saved successfully!");
+		        logs.setAction("POST");
+		    	logs.setDetials("Task saved successfully!");
+		    	logs.setEmail(username);
+		    	logsService.save(logs);
 		    } catch (Exception e) {
 		        redirectAttributes.addFlashAttribute("errorMessage", "Failed to save task. Please try again.");
 		    }
@@ -318,7 +338,14 @@ public class DashboardController {
 	    
 	    @PostMapping("/dashboard/task/edit")
 	    public String updateTask(@ModelAttribute SalesExecutiveTask salesExecutiveTask) {
+	    	Logs logs = new Logs();
+	    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		    String username = authentication.getName();
 	    	salesExecutiveTaskService.updateTask(salesExecutiveTask);
+	    	logs.setAction("POST");
+	    	logs.setDetials("Updated Task: " + salesExecutiveTask.getTaskId() + " to " + salesExecutiveTask.getStatus() + " Succeccfully!");
+	    	logs.setEmail(username);
+	    	logsService.save(logs);
 			return "redirect:/dashboard/dailytask";
 	    }
 	    
@@ -348,6 +375,8 @@ public class DashboardController {
 	                                  .findFirst()
 	                                  .orElse(null);
 	        
+	        Logs logs = new Logs();
+	        
 	        if(role.equals("ROLE_SALES")) {
 	        	ticket.setSalesExectiveId(email);
 	        	SalesExecutive salesExecutive = salesExecutiveService.findSalesExecutiveByEmail(email);
@@ -363,6 +392,10 @@ public class DashboardController {
 	        try {
 	        	customerSupportTicketService.saveTicket(ticket);
 		        redirectAttributes.addFlashAttribute("successMessage", "Task saved successfully!");
+		        logs.setAction("POST");
+		    	logs.setDetials("Task saved successfully!");
+		    	logs.setEmail(email);
+		    	logsService.save(logs);
 		    } catch (Exception e) {
 		        redirectAttributes.addFlashAttribute("errorMessage", "Failed to save task. Please try again.");
 		    }
@@ -379,7 +412,6 @@ public class DashboardController {
 	                                  .orElse(null);
 	        
 	        List<CustomerSupportTickets> customerSupportTickets = customerSupportTicketService.getAllTickets(email, role);
-	        
 	        
 	        model.addAttribute("customerSupportTickets", customerSupportTickets);
 	        
