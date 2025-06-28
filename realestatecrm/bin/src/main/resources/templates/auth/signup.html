@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup - Real Estate CRM</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<style>
+    body {
+        background-image: url('https://callhub.io/wp-content/uploads/2021/07/real-estate-crm-header-image-scaled.jpg'); 
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .login-container {
+        max-width: 400px;
+        width: 100%; /* Ensures responsiveness */
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<body>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="login-container">
+        <h2 class="text-center mb-4">Signup</h2>
+        
+        <form th:action="@{/signup}" th:object="${manager}" method="post" onsubmit="return validatePasswords()">
+            <!-- First Name -->
+            <div class="mb-3">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" th:field="*{firstName}" class="form-control" id="firstName" name="firstName" required>
+            </div>
+
+            <!-- Last Name -->
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="form-control" id="lastName" name="lastName" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" th:field="*{email}" class="form-control" id="email" name="email" required>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="mb-3">
+                <label for="mobileNumber" class="form-label">Mobile Number</label>
+                <input type="number" th:field="*{mobileNumber}" class="form-control" id="mobileNumber" name="mobileNumber" required>
+            </div>
+
+            <!-- Company Name -->
+            <div class="mb-3">
+                <label for="companyName" class="form-label">Company Name</label>
+                <input type="text" th:field="*{companyName}" class="form-control" id="companyName" name="companyName" required>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" th:field="*{password}" class="form-control" id="password" name="password" required>
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password')">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Retype Password -->
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Retype Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                <div class="text-danger mt-1" id="error-message"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100">Signup</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+<!-- JavaScript for Password Toggle & Validation -->
+<script>
+function togglePassword(fieldId) {
+    var field = document.getElementById(fieldId);
+    field.type = field.type === "password" ? "text" : "password";
+}
+
+function validatePasswords() {
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirmPassword").value;
+    var errorMessage = document.getElementById("error-message");
+
+    if (password !== confirmPassword) {
+        errorMessage.textContent = "Passwords do not match!";
+        return false;
+    }
+    return true;
+}
+</script>
+
+</body>
+</html>
