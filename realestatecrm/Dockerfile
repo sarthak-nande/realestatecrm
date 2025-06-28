@@ -2,7 +2,7 @@
 FROM maven:3.9.6-eclipse-temurin-17 as builder
 
 WORKDIR /app
-COPY realestatecrm/ .            # 👈 copy inner project folder contents
+COPY realestatecrm/ .   # Copy contents of inner realestatecrm folder
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the jar
