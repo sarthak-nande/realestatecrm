@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: springboot-mysql-app
+    env: docker
+    plan: free
+    dockerContext: .
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://bottiza5baeapwtmsroi-mysql.services.clever-cloud.com:20127/bottiza5baeapwtmsroi
+      - key: SPRING_DATASOURCE_USERNAME
+        value: ugwydlbwosadl7rw
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: ZNWeQD2HFDos2YNYUbdE
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: com.mysql.cj.jdbc.Driver
