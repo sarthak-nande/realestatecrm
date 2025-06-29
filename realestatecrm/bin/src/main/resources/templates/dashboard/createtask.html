@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Task</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Custom styles for the dashboard layout */
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+/* Offcanvas width for smaller screens */
+#offcanvasMenu {
+	--bs-offcanvas-width: 250px;
+}
+
+/* Sidebar for larger screens */
+.sidebar {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	background-color: #f8f9fa; /* Light grey background */
+	padding-top: 1rem;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navigation links styling */
+.nav-link {
+	transition: background-color 0.3s ease, color 0.3s ease;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	color: #343a40; /* Dark grey text */
+	padding: 0.75rem 1rem;
+}
+
+.nav-link:hover {
+	background-color: #e2e6ea; /* Lighter grey on hover */
+	color: #0056b3; /* Darker blue on hover */
+}
+
+.nav-link.active {
+	background-color: #007bff; /* Primary blue for active link */
+	color: white; /* White text for active link */
+}
+
+.nav-link i {
+	margin-right: 10px; /* Space between icon and text */
+	width: 20px; /* Fixed width for icons to align text */
+}
+
+/* Main content area */
+.main-content {
+	flex-grow: 1; /* Allows content to take up remaining space */
+	padding: 20px;
+	background-color: #e9ecef; /* Slightly darker background for content area */
+	display: flex; /* Use flexbox to center content vertically */
+	justify-content: center; /* Center content horizontally */
+	align-items: center; /* Center content vertically */
+	min-height: calc(100vh - 56px); /* Adjust based on navbar height */
+}
+
+/* Card specific styles for the form */
+.card {
+	border-radius: 15px; /* More rounded corners */
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+	border: none; /* Remove default border */
+	max-width: 800px; /* Adjust max-width for multi-column form */
+	width: 100%; /* Ensure it takes full width within its container */
+	padding: 2.5rem; /* Increase padding inside the card */
+	margin: auto; /* Center the card horizontally (though flexbox does this already) */
+}
+
+.form-label {
+	font-weight: 600; /* Slightly bolder labels */
+	color: #495057; /* Darker grey for labels */
+	margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+	border-radius: 8px; /* Rounded input fields */
+	padding: 0.75rem 1rem; /* More padding inside inputs */
+	border: 1px solid #ced4da;
+	transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus, .form-select:focus {
+	border-color: #80bdff; /* Bootstrap primary focus color */
+	box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25); /* Light blue shadow on focus */
+}
+
+.btn-primary {
+	background-color: #007bff; /* Standard primary blue */
+	border-color: #007bff;
+	padding: 0.75rem 1.5rem; /* Larger button padding */
+	font-size: 1.1rem; /* Slightly larger font size */
+	border-radius: 8px; /* Rounded button */
+	transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+		transform 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3; /* Darker blue on hover */
+	border-color: #0056b3;
+	transform: translateY(-2px); /* Slight lift on hover */
+}
+
+h2 {
+	color: #007bff; /* Primary blue for the heading */
+	margin-bottom: 1.5rem;
+	font-weight: 700; /* Bold heading */
+}
+
+/* Logout button styling */
+.btn-transparent {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	color: #212529 !important; /* Adjust color as needed */
+	padding-left: 0;
+	padding-right: 0;
+	text-align: left;
+}
+
+.btn-transparent:hover {
+	color: #dc3545 !important; /* Red on hover for logout */
+	background-color: transparent !important;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark shadow-sm">
+		<div class="container-fluid">
+			<button class="navbar-toggler d-md-none d-block" type="button"
+				data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="#">Dashboard</a>
+		</div>
+	</nav>
+
+	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu"
+		aria-labelledby="offcanvasMenuLabel">
+		<div class="offcanvas-header">
+			<h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+				aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<ul class="nav flex-column">
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link active" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 sidebar d-none d-md-block">
+				<ul class="nav flex-column mt-3">
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link active" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-md-10 main-content">
+				<div class="card shadow-lg">
+					<h2 class="text-center text-primary mb-4">Create Task</h2>
+					<div th:if="${successMessage}" class="alert alert-success">
+					    <span th:text="${successMessage}"></span>
+					</div>
+					
+					<div th:if="${errorMessage}" class="alert alert-danger">
+					    <span th:text="${errorMessage}"></span>
+					</div>
+					
+					<form th:action="@{/dashboard/createTask}" th:object="${task}"
+						method="post">
+
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label"><i class="fa-solid fa-user"></i>
+									Select Sales Executive</label> <select class="form-select"
+									th:field="*{salesExecutive}" required>
+									<option th:each="exec : ${salesExecutives}"
+										th:value="${exec.email}"
+										th:text="${exec.firstName + ' ' + exec.lastName + ' (' + exec.email + ')' }">
+									</option>
+								</select>
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label class="form-label"><i class="fa-solid fa-user"></i>
+									Select Customer</label> <select class="form-select"
+									th:field="*{customer}" required>
+									<option th:each="cust : ${customers}"
+										th:value="${cust.email}"
+										th:text="${cust.firstName + ' ' + cust.lastName + ' (' + cust.email + ')' }">
+									</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label"><i class="fa-solid fa-calendar"></i>
+									Task Date</label> <input type="date" class="form-control"
+									th:field="*{taskDate}" required />
+							</div>
+
+							<div class="col-md-6 mb-3">
+								<label class="form-label"><i class="fa-solid fa-tasks"></i>
+									Task Type</label> <select class="form-select"
+									th:field="*{taskType}">
+									<option value="Follow-up">Follow-up</option>
+									<option value="Call">Call</option>
+									<option value="Meeting">Meeting</option>
+									<option value="Demo">Demo</option>
+									<option value="Closing">Closing</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label"><i
+								class="fa-solid fa-align-left"></i> Description</label>
+							<textarea class="form-control" th:field="*{description}"
+								rows="3" required></textarea>
+						</div>
+
+						<div class="mb-4">
+							<label class="form-label"><i
+								class="fa-solid fa-clipboard-check"></i> Status</label> <select
+								class="form-select" th:field="*{status}">
+								<option value="PENDING">Pending</option>
+								<option value="COMPLETED">Completed</option>
+								<option value="CANCELLED">Cancelled</option>
+							</select>
+						</div>
+
+						<button type="submit" class="btn btn-primary w-100">Create
+							Task</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		window.addEventListener('pageshow', function(event) {
+			if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+				window.location.reload();
+			}
+		});
+
+		// Ensure the sidebar remains visible on page load for larger screens
+		window.addEventListener('load', function() {
+			if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
+				document.getElementById('offcanvasMenu').classList.remove('show');
+			}
+		});
+	</script>
+</body>
+</html>
