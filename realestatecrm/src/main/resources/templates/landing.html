@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealEstate CRM - Streamline Your Property Business</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --light-blue: #3b82f6;
+            --accent-blue: #60a5fa;
+            --dark: #1f2937;
+            --light-gray: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(30, 58, 138, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+        }
+
+        .auth-buttons .btn {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .auth-buttons .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Responsiveness - Keep buttons inline */
+        @media (max-width: 768px) {
+            .navbar-custom {
+                padding: 8px 0;
+            }
+            
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+            
+            .auth-buttons .btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .welcome-text {
+                font-size: 0.85rem;
+                margin-right: 10px;
+            }
+            
+            .welcome-section {
+                flex-direction: row !important;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .welcome-section form {
+                margin: 0;
+            }
+            
+            .welcome-section .btn {
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .auth-buttons .btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .welcome-text {
+                font-size: 0.75rem;
+                margin-right: 8px;
+            }
+            
+            .welcome-text .fw-bold {
+                display: none; /* Hide username on very small screens to save space */
+            }
+            
+            .auth-buttons .d-flex {
+                gap: 8px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            .auth-buttons .btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+            
+            .welcome-text {
+                font-size: 0.7rem;
+                margin-right: 5px;
+            }
+            
+            .btn-hero, .btn-outline-light {
+                min-width: auto;
+            }
+            
+            /* Simplify button text on very small screens */
+            .auth-buttons .btn i {
+                margin-right: 3px;
+            }
+        }
+
+        /* Ensure proper alignment */
+        .top-bar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .welcome-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-section form {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-1px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: white;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 50%, var(--accent-blue) 100%);
+            color: white;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .btn-hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            color: var(--primary-blue);
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+            color: var(--primary-blue);
+        }
+
+        .features-section {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--accent-blue) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--accent-blue) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .auth-section {
+            background: linear-gradient(135deg, var(--dark) 0%, #374151 100%);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.25);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-auth {
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--accent-blue) 100%);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary-blue) 100%);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .footer-text {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            color: white;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-icons a:hover {
+            background: var(--accent-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(96, 165, 250, 0.4);
+        }
+
+        .stats-section {
+            background: var(--light-gray);
+            padding: 80px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--dark);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--accent-blue) 100%);
+            border-radius: 2px;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 60px; height: 60px; top: 60%; left: 80%; animation-delay: 5s; }
+        .shape:nth-child(3) { width: 100px; height: 100px; top: 80%; left: 20%; animation-delay: 10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border: none;
+            color: white;
+            font-weight: 500;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .feature-card { margin-bottom: 30px; }
+            .auth-card { margin-bottom: 30px; }
+            .hero-section { padding: 140px 0 80px; }
+            .btn-hero, .btn-outline-light { 
+                padding: 12px 25px; 
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title { font-size: 2rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .section-title { font-size: 2rem; }
+            .hero-section { padding: 120px 0 60px; }
+            .d-flex.gap-3.flex-wrap {
+                flex-direction: column !important;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar with Auth Buttons -->
+    <div class="navbar-custom fixed-top">
+        <div class="container">
+            <div class="top-bar-container">
+                <div class="navbar-brand">
+                    <i class="fas fa-home me-2"></i>RealEstate CRM
+                </div>
+                <div class="auth-buttons">
+                    <!-- Show logout button if user is authenticated -->
+                    <div sec:authorize="isAuthenticated()" class="welcome-section">
+                        <span class="text-white welcome-text">Welcome, <span sec:authentication="name" class="fw-bold"></span></span>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn logout-btn">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </button>
+                        </form>
+                    </div>
+                    <!-- Show login/signup buttons if user is not authenticated -->
+                    <div sec:authorize="!isAuthenticated()" class="d-flex gap-2">
+                        <a href="/login" class="btn btn-outline-light">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a href="/signup" class="btn btn-hero">
+                            <i class="fas fa-user-plus me-1"></i>Sign Up
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Streamline Your Real Estate Business</h1>
+                    <p class="hero-subtitle">
+                        Manage clients, properties, leads, and sales with our comprehensive CRM solution. 
+                        Built for real estate professionals who demand excellence.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="/signup" class="btn btn-hero">
+                            <i class="fas fa-rocket me-2"></i>Get Started
+                        </a>
+                        <a href="/login" class="btn btn-outline-light btn-lg" sec:authorize="!isAuthenticated()">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                        <div sec:authorize="isAuthenticated()" class="alert alert-light d-inline-block mb-0 py-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Welcome back, <span sec:authentication="name" class="fw-bold"></span>!
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="hero-image mt-5 mt-lg-0">
+                        <i class="fas fa-building" style="font-size: 15rem; opacity: 0.2;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Powerful Features for Real Estate Professionals</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4 class="mb-3">Client Management</h4>
+                        <p class="text-muted">
+                            Keep track of all client interactions, preferences, and communication history in one centralized location.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h4 class="mb-3">Property Listings</h4>
+                        <p class="text-muted">
+                            Manage your property inventory with detailed listings, photos, and advanced search capabilities.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="mb-3">Sales Tracking</h4>
+                        <p class="text-muted">
+                            Monitor leads, track sales progress, and analyze performance with comprehensive reporting tools.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4 class="mb-3">Secure Access</h4>
+                        <p class="text-muted">
+                            Role-based access control ensures your data is secure with appropriate permissions for each user.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="mb-3">Mobile Responsive</h4>
+                        <p class="text-muted">
+                            Access your CRM anywhere, anytime with our fully responsive design that works on all devices.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h4 class="mb-3">Customizable</h4>
+                        <p class="text-muted">
+                            Tailor the system to your specific business needs with customizable fields and workflows.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Properties Managed</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Client Interactions</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section (only show if not authenticated) -->
+    <section id="cta" class="auth-section" sec:authorize="!isAuthenticated()">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="auth-card">
+                        <h2 class="mb-4">
+                            <i class="fas fa-rocket me-3"></i>Ready to Transform Your Business?
+                        </h2>
+                        <p class="fs-5 mb-4">
+                            Join thousands of real estate professionals who trust our platform to manage their operations efficiently.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/signup" class="btn btn-auth btn-lg">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </a>
+                            <a href="/login" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        </div>
+                        <div class="text-center mt-4">
+                            <small class="text-white-50">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Secure • Reliable • Professional
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Welcome Section (only show if authenticated) -->
+    <section sec:authorize="isAuthenticated()" class="auth-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="auth-card">
+                        <h2 class="mb-4">
+                            <i class="fas fa-tachometer-alt me-3"></i>Welcome to Your Dashboard
+                        </h2>
+                        <p class="fs-5 mb-4">
+                            Hello <strong sec:authentication="name"></strong>! You're successfully logged in.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/dashboard" class="btn btn-auth">
+                                <i class="fas fa-chart-pie me-2"></i>Go to Dashboard
+                            </a>
+                            <a href="/properties" class="btn btn-outline-light">
+                                <i class="fas fa-building me-2"></i>Manage Properties
+                            </a>
+                            <a href="/clients" class="btn btn-outline-light">
+                                <i class="fas fa-users me-2"></i>View Clients
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-brand">
+                        <i class="fas fa-home me-2"></i>RealEstate CRM
+                    </div>
+                    <p class="footer-text">
+                        Streamlining real estate operations with powerful, intuitive tools designed for modern professionals. 
+                        Your success is our mission.
+                    </p>
+                    <div class="social-icons mt-4">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Platform</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-text text-decoration-none">Features</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Pricing</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Security</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">API</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Support</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-text text-decoration-none">Help Center</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Documentation</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Contact Us</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Status</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Company</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-text text-decoration-none">About</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Blog</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Careers</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Press</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="text-white mb-3">Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-text text-decoration-none">Privacy</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Terms</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Cookies</a></li>
+                        <li><a href="#" class="footer-text text-decoration-none">Licenses</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="footer-text mb-0">

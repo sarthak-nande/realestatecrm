@@ -47,9 +47,8 @@ public class SecurityConfig {
 		http
 		.csrf(AbstractHttpConfigurer::disable)
 		.authorizeHttpRequests(configurer -> configurer
-				.requestMatchers("/login").anonymous()
-				.requestMatchers("/signup").anonymous()
-				.requestMatchers("/restricted").hasRole("ADMIN")
+				.requestMatchers("/", "/signup", "/css/**", "/js/**").permitAll()
+				.requestMatchers("/admin", "/updateStatus", "/updateSalesStatus", "/dashboard/searchManagers").hasRole("ADMIN")
 				.anyRequest().authenticated())
 				.formLogin(form -> form
 						.loginPage("/login")
