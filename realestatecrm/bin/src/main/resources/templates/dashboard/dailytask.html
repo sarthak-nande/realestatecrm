@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Tasks</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Custom styles for the dashboard layout */
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+/* Offcanvas width for smaller screens */
+#offcanvasMenu {
+	--bs-offcanvas-width: 250px;
+}
+
+/* Sidebar for larger screens */
+.sidebar {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	background-color: #f8f9fa; /* Light grey background */
+	padding-top: 1rem;
+	box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Navigation links styling */
+.nav-link {
+	transition: background-color 0.3s ease, color 0.3s ease;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	color: #343a40; /* Dark grey text */
+	padding: 0.75rem 1rem;
+}
+
+.nav-link:hover {
+	background-color: #e2e6ea; /* Lighter grey on hover */
+	color: #0056b3; /* Darker blue on hover */
+}
+
+.nav-link.active {
+	background-color: #007bff; /* Primary blue for active link */
+	color: white; /* White text for active link */
+}
+
+.nav-link i {
+	margin-right: 10px; /* Space between icon and text */
+	width: 20px; /* Fixed width for icons to align text */
+}
+
+/* Main content area */
+.main-content {
+	flex-grow: 1; /* Allows content to take up remaining space */
+	padding: 20px;
+	background-color: #e9ecef; /* Slightly darker background for content area */
+}
+
+/* Card specific styles */
+.card {
+	transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+	border-radius: 10px; /* Slightly rounded corners */
+	overflow: hidden; /* Ensures content respects border-radius */
+}
+
+.card:hover {
+	transform: translateY(-5px); /* Lift effect */
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
+}
+
+.card-title {
+	font-weight: bold; /* Make card titles bold */
+}
+
+/* Pagination cursor */
+.pagination a {
+	cursor: pointer;
+}
+
+/* Search input styling */
+#searchInput {
+	border-radius: 20px; /* Rounded search bar */
+	padding: 10px 15px;
+	border: 1px solid #ced4da;
+}
+
+/* Tab styling */
+.nav-tabs .nav-link {
+	color: #495057;
+	border: none;
+	border-bottom: 3px solid transparent;
+	transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+	color: #007bff;
+	border-bottom: 3px solid #007bff;
+	background-color: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+	border-color: #007bff;
+	color: #007bff;
+}
+
+/* Button styling */
+.btn-primary {
+	background-color: #007bff;
+	border-color: #007bff;
+	transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+	border-color: #0056b3;
+}
+
+/* Logout button styling */
+.btn-transparent {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	color: #212529 !important; /* Adjust color as needed */
+	padding-left: 0;
+	padding-right: 0;
+	text-align: left;
+}
+
+.btn-transparent:hover {
+	color: #dc3545 !important; /* Red on hover for logout */
+	background-color: transparent !important;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark shadow-sm">
+		<div class="container-fluid">
+			<button class="navbar-toggler d-md-none d-block" type="button"
+				data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+				aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="#">Dashboard</a>
+		</div>
+	</nav>
+
+	<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu"
+		aria-labelledby="offcanvasMenuLabel">
+		<div class="offcanvas-header">
+			<h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+			<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+				aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<ul class="nav flex-column">
+				<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link active" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link active" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 sidebar d-none d-md-block">
+				<ul class="nav flex-column mt-3">
+					<li class="nav-item"><a class="nav-link" th:href="@{/dashboard}"><i
+						class="fa-solid fa-house"></i> Home</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addcustomer}"><i
+							class="fa-solid fa-user-plus"></i> Add Customer </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/addSalesExec}"><i
+							class="fa-solid fa-user-plus"></i> Add Sales-Exe </a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/salesexecutivedetails}"><i
+							class="fa-solid fa-circle-info"></i>Sales Executive</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/customerDetails}"><i
+							class="fa-solid fa-circle-info"></i>Customer Details</a></li>
+					
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link" th:href="@{/dashboard/createTask}"><i class="fa-regular fa-square-plus"></i> Create Task</a></li>
+						
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/createTicket}"><i class="fa-regular fa-square-plus"></i> Create Ticket</a></li>
+						
+					<li sec:authorize="hasAuthority('ROLE_MANAGER')" class="nav-item"><a
+						class="nav-link active" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Assigned Tasks </a></li>
+							
+					<li sec:authorize="hasAuthority('ROLE_SALES')" class="nav-item"><a
+						class="nav-link active" th:href="@{/dashboard/dailytask}"><i
+							class="fa-solid fa-list-check"></i> Daily Tasks</a></li>
+					
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/dashboard/tickets}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
+						
+					<li class="nav-item"><a class="nav-link"th:href="@{/dashboard/leaderboard}"><i class="fa-solid fa-graduation-cap"></i> Leader Board</a></li>
+					
+					<li>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="btn btn-transparent nav-link">
+								<i class="fas fa-sign-out-alt"></i> Logout
+							</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-md-10 main-content">
+				<div class="container mt-4">
+					<h2 class="text-center text-primary mb-4">Daily Tasks</h2>
+
+					<div class="mb-4">
+						<input type="text" id="searchInput" class="form-control"
+							placeholder="Search tasks by customer, executive, or description...">
+					</div>
+
+					<ul class="nav nav-tabs justify-content-center mb-4" id="taskTabs">
+						<li class="nav-item"><a class="nav-link active"
+							data-bs-toggle="tab" href="#pendingTasks">Pending</a></li>
+						<li class="nav-item"><a class="nav-link" data-bs-toggle="tab"
+							href="#completedTasks">Completed</a></li>
+						<li class="nav-item"><a class="nav-link" data-bs-toggle="tab"
+							href="#cancelledTasks">Cancelled</a></li>
+					</ul>
+
+					<div class="tab-content mt-3">
+						<div class="tab-pane fade show active" id="pendingTasks">
+							<div class="row g-4" id="pendingContainer">
+								<div class="col-md-4"
+									th:each="task : ${salesExecutiveTasks}"
+									th:if="${task.status == 'Pending'}">
+									<div class="card shadow-sm p-3">
+										<h5 class="card-title text-primary"
+											th:text="${task.customer}"></h5>
+										<p class="card-text">
+											<strong>Executive:</strong> <span
+												th:text="${task.salesExecutive}"></span>
+										</p>
+										<p class="card-text">
+											<strong>Task Type:</strong> <span th:text="${task.taskType}"></span>
+										</p>
+										<p class="card-text">
+											<strong>Description:</strong> <span
+												th:text="${task.description}"></span>
+										</p>
+										<a th:href="@{/dashboard/task/edit(email=${task.taskId})}"
+											class="btn btn-primary btn-sm mt-2"> Update </a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane fade" id="completedTasks">
+							<div class="row g-4" id="completedContainer">
+								<div class="col-md-4"
+									th:each="task : ${salesExecutiveTasks}"
+									th:if="${task.status == 'Completed'}">
+									<div class="card shadow-sm p-3">
+										<h5 class="card-title text-success"
+											th:text="${task.customer}"></h5>
+										<p class="card-text">
+											<strong>Executive:</strong> <span
+												th:text="${task.salesExecutive}"></span>
+										</p>
+										<p class="card-text">
+											<strong>Task Type:</strong> <span th:text="${task.taskType}"></span>
+										</p>
+										<p class="card-text">
+											<strong>Description:</strong> <span
+												th:text="${task.description}"></span>
+										</p>
+										<a th:href="@{/dashboard/task/edit(email=${task.taskId})}"
+											class="btn btn-primary btn-sm mt-2"> Update </a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane fade" id="cancelledTasks">
+							<div class="row g-4" id="cancelledContainer">
+								<div class="col-md-4"
+									th:each="task : ${salesExecutiveTasks}"
+									th:if="${task.status == 'Cancelled'}">
+									<div class="card shadow-sm p-3">
+										<h5 class="card-title text-danger"
+											th:text="${task.customer}"></h5>
+										<p class="card-text">
+											<strong>Executive:</strong> <span
+												th:text="${task.salesExecutive}"></span>
+										</p>
+										<p class="card-text">
+											<strong>Task Type:</strong> <span th:text="${task.taskType}"></span>
+										</p>
+										<p class="card-text">
+											<strong>Description:</strong> <span
+												th:text="${task.description}"></span>
+										</p>
+										<a th:href="@{/dashboard/task/edit(email=${task.taskId})}"
+											class="btn btn-primary btn-sm mt-2"> Update </a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<nav>
+						<ul class="pagination justify-content-center mt-4">
+							<li class="page-item"><a class="page-link" href="#"
+								id="prevPage">Previous</a></li>
+							<li class="page-item"><a class="page-link" href="#"
+								id="nextPage">Next</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("searchInput");
+        const taskTabs = document.getElementById("taskTabs");
+
+        let currentPage = 1;
+        const cardsPerPage = 6; // Number of cards to display per page
+
+        // Function to filter and display cards based on search input and active tab
+        function filterAndShowCards() {
+            const filter = searchInput.value.toLowerCase();
+            const activeTabPane = document.querySelector('.tab-pane.show.active');
+            let cardsInActiveTab = Array.from(activeTabPane.querySelectorAll(".card"));
+
+            // Filter cards based on search input
+            cardsInActiveTab.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(filter)) {
+                    card.parentElement.style.display = "block"; // Show the col-md-4 parent
+                } else {
+                    card.parentElement.style.display = "none"; // Hide the col-md-4 parent
+                }
+            });
+
+            // Re-apply pagination to the currently visible cards
+            applyPagination(activeTabPane);
+        }
+
+        // Function to apply pagination
+        function applyPagination(container) {
+            const visibleCards = Array.from(container.querySelectorAll(".col-md-4[style*='block']"));
+            const totalPages = Math.ceil(visibleCards.length / cardsPerPage);
+
+            visibleCards.forEach((cardParent, index) => {
+                if (index >= (currentPage - 1) * cardsPerPage && index < currentPage * cardsPerPage) {
+                    cardParent.style.display = "block";
+                } else {
+                    cardParent.style.display = "none";
+                }
+            });
+
+            // Enable/disable pagination buttons
+            document.getElementById("prevPage").parentElement.classList.toggle("disabled", currentPage === 1);
+            document.getElementById("nextPage").parentElement.classList.toggle("disabled", currentPage === totalPages || totalPages === 0);
+        }
+
+        // Event listener for search input
+        searchInput.addEventListener("keyup", filterAndShowCards);
+
+        // Event listener for tab clicks
+        taskTabs.addEventListener("click", function(event) {
+            if (event.target.classList.contains("nav-link")) {
+                currentPage = 1; // Reset to first page on tab change
+                // Use a small delay to ensure tab content is fully switched before filtering/pagination
+                setTimeout(filterAndShowCards, 50); 
+            }
+        });
+
+        // Event listener for "Previous" pagination button
+        document.getElementById("prevPage").addEventListener("click", function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                const activeTabPane = document.querySelector('.tab-pane.show.active');
+                applyPagination(activeTabPane);
+            }
+        });
+
+        // Event listener for "Next" pagination button
+        document.getElementById("nextPage").addEventListener("click", function(e) {
+            e.preventDefault();
+            const activeTabPane = document.querySelector('.tab-pane.show.active');
+            const visibleCards = Array.from(activeTabPane.querySelectorAll(".col-md-4[style*='block']"));
+            const totalPages = Math.ceil(visibleCards.length / cardsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                applyPagination(activeTabPane);
+            }
+        });
+
+        // Initial load: show all cards and apply pagination
+        filterAndShowCards();
+
+        // Reload page on back/forward navigation to ensure fresh state
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+
+        // Ensure the sidebar remains visible on page load for larger screens
+		window.addEventListener('load', function() {
+			if (window.innerWidth >= 768) { // Bootstrap's md breakpoint
+				document.getElementById('offcanvasMenu').classList.remove('show');
+			}
+		});
+    });
+    </script>
+</body>
+</html>
