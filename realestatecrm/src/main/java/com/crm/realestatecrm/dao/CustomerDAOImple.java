@@ -151,11 +151,19 @@ public class CustomerDAOImple implements CustomerDAO{
 
 	@Override
 	public List<String> getCreatedTime(String role, String email) {
-		TypedQuery<String> query = entityManager.createQuery(
-			    "SELECT FUNCTION('DATE_FORMAT', c.createdAt, '%Y-%m-%d %H:%i:%s') FROM Customer c", String.class);
-			List<String> createdAtList = query.getResultList();
-
-
+		List<String> createdAtList = new ArrayList<>();
+		if(role == "ROLE_MANAGER") {
+			TypedQuery<String> query = entityManager.createQuery(
+				    "SELECT FUNCTION('DATE_FORMAT', c.createdAt, '%Y-%m-%d %H:%i:%s') FROM Customer c where c.manager_id = :email", String.class).setParameter("email", email);
+			createdAtList = query.getResultList();
+		}
+		
+		if(role == "ROLE_SALES") {
+			TypedQuery<String> query = entityManager.createQuery(
+				    "SELECT FUNCTION('DATE_FORMAT', c.createdAt, '%Y-%m-%d %H:%i:%s') FROM Customer c where c.sales_exec_id = :email", String.class).setParameter("email", email);
+			createdAtList = query.getResultList();
+		}
+		
 		return createdAtList;
 	}
 	
