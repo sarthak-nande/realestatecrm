@@ -496,12 +496,11 @@
         <div class="container">
             <div class="top-bar-container">
                 <div class="navbar-brand">
-                    <i class="fas fa-home me-2"></i>RealEstate CRM
+                    <i class="fas fa-home me-2"></i>RECRM
                 </div>
                 <div class="auth-buttons">
                     <!-- Show logout button if user is authenticated -->
                     <div sec:authorize="isAuthenticated()" class="welcome-section">
-                        <span class="text-white welcome-text">Welcome, <span sec:authentication="name" class="fw-bold"></span></span>
                         <form th:action="@{/logout}" method="post">
                             <button type="submit" class="btn logout-btn">
                                 <i class="fas fa-sign-out-alt me-1"></i>Logout
@@ -538,7 +537,7 @@
                         Built for real estate professionals who demand excellence.
                     </p>
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="/signup" class="btn btn-hero">
+                        <a href="/signup" class="btn btn-hero" sec:authorize="!isAuthenticated()">
                             <i class="fas fa-rocket me-2"></i>Get Started
                         </a>
                         <a href="/login" class="btn btn-outline-light btn-lg" sec:authorize="!isAuthenticated()">
@@ -714,10 +713,10 @@
                             <a href="/dashboard" class="btn btn-auth">
                                 <i class="fas fa-chart-pie me-2"></i>Go to Dashboard
                             </a>
-                            <a href="/properties" class="btn btn-outline-light">
+                            <a href="/dashboard/properties" class="btn btn-outline-light">
                                 <i class="fas fa-building me-2"></i>Manage Properties
                             </a>
-                            <a href="/clients" class="btn btn-outline-light">
+                            <a href="/dashboard/customerDetails" class="btn btn-outline-light">
                                 <i class="fas fa-users me-2"></i>View Clients
                             </a>
                         </div>
