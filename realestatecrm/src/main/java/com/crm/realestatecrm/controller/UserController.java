@@ -22,6 +22,11 @@ public class UserController {
 		this.managerService = managerService;
 	}
 	
+	@GetMapping("/")
+	public String landingPage() {
+	    return "landing"; 
+	}
+	
 	@GetMapping("/login")
 	@PreAuthorize("isAuthenticated()")
 	public String loadLoginPage(Authentication authentication) {
@@ -32,7 +37,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/signup")
-	public String loadSignUp(@ModelAttribute Manager manager) {
+	@PreAuthorize("isAuthenticated()")
+	public String loadSignUp(@ModelAttribute Manager manager,Authentication authentication) {
+		if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:/dashboard"; // Redirect if user is already authenticated
+        }
 		return "auth/signup";
 	}
 	
