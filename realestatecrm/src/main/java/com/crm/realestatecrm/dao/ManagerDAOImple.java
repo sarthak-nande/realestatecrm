@@ -14,7 +14,7 @@ import jakarta.transaction.Transactional;
 @Repository
 public class ManagerDAOImple implements MangerDAO {
 	
-	private EntityManager entityManager;
+	private EntityManager entityManager;  // Handles database operations
 	
 	private final BCryptPasswordEncoder byBCryptPasswordEncoder;
 	
@@ -25,7 +25,7 @@ public class ManagerDAOImple implements MangerDAO {
 	}
 
 	@Override
-	@Transactional
+	@Transactional  // Ensures all DB operations happen in one transaction
 	public void save(Manager manager) {
 		Users user = new Users();
 		Authorities authorities = new Authorities();
